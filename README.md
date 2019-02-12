@@ -1,10 +1,10 @@
-# WordPress Plugin Boilerplate
+# WordPress Best Practices Security Plugin
 
-A standardized, organized, object-oriented foundation for building high-quality WordPress Plugins.
+Secure your WordPress installation by just following the best practices.
 
 ## Contents
 
-The WordPress Plugin Boilerplate includes the following files:
+The WordPress Best Practices Security Plugin includes the following files:
 
 * `.gitignore`. Used to exclude certain files from the repository.
 * `CHANGELOG.md`. The list of changes to the core project.
@@ -13,7 +13,7 @@ The WordPress Plugin Boilerplate includes the following files:
 
 ## Features
 
-* The Boilerplate is based on the [Plugin API](http://codex.wordpress.org/Plugin_API), [Coding Standards](http://codex.wordpress.org/WordPress_Coding_Standards), and [Documentation Standards](https://make.wordpress.org/core/handbook/best-practices/inline-documentation-standards/php/).
+* This plugin is based on [WordPress Plugin Boilerplate](https://github.com/DevinVinson/WordPress-Plugin-Boilerplate) which is based on the [Plugin API](http://codex.wordpress.org/Plugin_API), [Coding Standards](http://codex.wordpress.org/WordPress_Coding_Standards), and [Documentation Standards](https://make.wordpress.org/core/handbook/best-practices/inline-documentation-standards/php/).
 * All classes, functions, and variables are documented so that you know what you need to change.
 * The Boilerplate uses a strict file organization scheme that corresponds both to the WordPress Plugin Repository structure, and that makes it easy to organize the files that compose the plugin.
 * The project includes a `.pot` file as a starting point for internationalization.
@@ -36,7 +36,7 @@ The original launch of this version of the boilerplate included the folder struc
 
 ### i18n Tools
 
-The WordPress Plugin Boilerplate uses a variable to store the text domain used when internationalizing strings throughout the Boilerplate. To take advantage of this method, there are tools that are recommended for providing correct, translatable files:
+The WordPress Best Practices Security Plugin uses a variable to store the text domain used when internationalizing strings throughout the Boilerplate. To take advantage of this method, there are tools that are recommended for providing correct, translatable files:
 
 * [Poedit](http://www.poedit.net/)
 * [makepot](http://i18n.svn.wordpress.org/tools/trunk/)
@@ -46,7 +46,7 @@ Any of the above tools should provide you with the proper tooling to internation
 
 ## License
 
-The WordPress Plugin Boilerplate is licensed under the GPL v2 or later.
+The WordPress Best Practices Security Plugin is licensed under the GPL v2 or later.
 
 > This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License, version 2, as published by the Free Software Foundation.
 
@@ -60,7 +60,7 @@ A copy of the license is included in the root of the plugin’s directory. The f
 
 ### Licensing
 
-The WordPress Plugin Boilerplate is licensed under the GPL v2 or later; however, if you opt to use third-party code that is not compatible with v2, then you may need to switch to using code that is GPL v3 compatible.
+The WordPress Best Practices Security Plugin is licensed under the GPL v2 or later; however, if you opt to use third-party code that is not compatible with v2, then you may need to switch to using code that is GPL v3 compatible.
 
 For reference, [here's a discussion](http://make.wordpress.org/themes/2013/03/04/licensing-note-apache-and-gpl/) that covers the Apache 2.0 License used by [Bootstrap](http://twitter.github.io/bootstrap/).
 
@@ -72,7 +72,7 @@ Note that if you include your own classes, or third-party libraries, there are t
 * `wpbp-security/admin` is for all admin-specific functionality
 * `wpbp-security/public` is for all public-facing functionality
 
-Note that previous versions of the Boilerplate did not include `wpbp_security_Loader` but this class is used to register all filters and actions with WordPress.
+Note that this plugin includes `WPBP_Security_Loader`, this class is used to register all filters and actions with WordPress.
 
 The example code provided shows how to register your hooks with the Loader class.
 
@@ -86,12 +86,10 @@ The same is true of using tools like Grunt, Composer, etc. These are all fantast
 
 # Credits
 
+This plugin is based on WordPress Plugin Boilerplate.
+
 The WordPress Plugin Boilerplate was started in 2011 by [Tom McFarlin](http://twitter.com/tommcfarlin/) and has since included a number of great contributions. In March of 2015 the project was handed over by Tom to Devin Vinson.
 
 The current version of the Boilerplate was developed in conjunction with [Josh Eaton](https://twitter.com/jjeaton), [Ulrich Pogson](https://twitter.com/grapplerulrich), and [Brad Vincent](https://twitter.com/themergency).
 
 The homepage is based on a design as provided by [HTML5Up](http://html5up.net), the Boilerplate logo was designed by Rob McCaskill of [BungaWeb](http://bungaweb.com), and the site `favicon` was created by [Mickey Kay](https://twitter.com/McGuive7).
-
-## Documentation, FAQs, and More
-
-If you’re interested in writing any documentation or creating tutorials please [let me know](http://devinvinson.com/contact/) .
