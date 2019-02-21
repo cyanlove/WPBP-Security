@@ -1,15 +1,15 @@
-# WordPress Best Practices Security Plugin
+# WordPress Security Best Practices Plugin
 
 Secure your WordPress installation by just following the best practices.
 
 ## Contents
 
-The WordPress Best Practices Security Plugin includes the following files:
+The WordPress Security Best Practices Plugin includes the following files:
 
 * `.gitignore`. Used to exclude certain files from the repository.
 * `CHANGELOG.md`. The list of changes to the core project.
 * `README.md`. The file that you’re currently reading.
-* A `wpbp-security` directory that contains the source code - a fully executable WordPress plugin.
+* A `wp-security-bp` directory that contains the source code - a fully executable WordPress plugin.
 
 ## Features
 
@@ -22,9 +22,9 @@ The WordPress Best Practices Security Plugin includes the following files:
 
 The Boilerplate can be installed directly into your plugins folder "as-is". You will want to rename it and the classes inside of it to fit your needs. For example, if your plugin is named 'example-me' then:
 
-* rename files from `wpbp_security` to `example_me`
-* change `wpbp_security` to `example_me`
-* change `wpbp_security_` to `EXAMPLE_ME_`
+* rename files from `wp_security_bp` to `example_me`
+* change `wp_security_bp` to `example_me`
+* change `wp_security_bp_` to `EXAMPLE_ME_`
 
 It's safe to activate the plugin at this point. Because the Boilerplate has no real functionality there will be no menu items, meta boxes, or custom post types added until you write the code.
 
@@ -36,7 +36,7 @@ The original launch of this version of the boilerplate included the folder struc
 
 ### i18n Tools
 
-The WordPress Best Practices Security Plugin uses a variable to store the text domain used when internationalizing strings throughout the Boilerplate. To take advantage of this method, there are tools that are recommended for providing correct, translatable files:
+The WordPress Security Best Practices Plugin uses a variable to store the text domain used when internationalizing strings throughout the Boilerplate. To take advantage of this method, there are tools that are recommended for providing correct, translatable files:
 
 * [Poedit](http://www.poedit.net/)
 * [makepot](http://i18n.svn.wordpress.org/tools/trunk/)
@@ -46,7 +46,7 @@ Any of the above tools should provide you with the proper tooling to internation
 
 ## License
 
-The WordPress Best Practices Security Plugin is licensed under the GPL v2 or later.
+The WordPress Security Best Practices Plugin is licensed under the GPL v2 or later.
 
 > This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License, version 2, as published by the Free Software Foundation.
 
@@ -60,7 +60,7 @@ A copy of the license is included in the root of the plugin’s directory. The f
 
 ### Licensing
 
-The WordPress Best Practices Security Plugin is licensed under the GPL v2 or later; however, if you opt to use third-party code that is not compatible with v2, then you may need to switch to using code that is GPL v3 compatible.
+The WordPress Security Best Practices Plugin is licensed under the GPL v2 or later; however, if you opt to use third-party code that is not compatible with v2, then you may need to switch to using code that is GPL v3 compatible.
 
 For reference, [here's a discussion](http://make.wordpress.org/themes/2013/03/04/licensing-note-apache-and-gpl/) that covers the Apache 2.0 License used by [Bootstrap](http://twitter.github.io/bootstrap/).
 
@@ -68,11 +68,11 @@ For reference, [here's a discussion](http://make.wordpress.org/themes/2013/03/04
 
 Note that if you include your own classes, or third-party libraries, there are three locations in which said files may go:
 
-* `wpbp-security/includes` is where functionality shared between the admin area and the public-facing parts of the site reside
-* `wpbp-security/admin` is for all admin-specific functionality
-* `wpbp-security/public` is for all public-facing functionality
+* `wp-security-bp/includes` is where functionality shared between the admin area and the public-facing parts of the site reside
+* `wp-security-bp/admin` is for all admin-specific functionality
+* `wp-security-bp/public` is for all public-facing functionality
 
-Note that this plugin includes `WPBP_Security_Loader`, this class is used to register all filters and actions with WordPress.
+Note that this plugin includes `WP_Security_BP_Loader`, this class is used to register all filters and actions with WordPress.
 
 The example code provided shows how to register your hooks with the Loader class.
 
