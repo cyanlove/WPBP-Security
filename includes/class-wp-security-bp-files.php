@@ -85,22 +85,24 @@ class WP_Security_BP_Files {
 			global $wp_filesystem;
 
 			// get the plugin directory path
-			$path = trailingslashit( $wp_filesystem->wp_plugins_dir() . $plugin_name );
+			$plugin_path = trailingslashit( $wp_filesystem->wp_plugins_dir() . $plugin_name );
 
 			// make a directory
-			$wp_filesystem->mkdir( $path. 'test-folder' );
+			$wp_filesystem->mkdir( $plugin_path. 'test-folder' );
 
 			// make a file and write content
 			$wp_filesystem->put_contents(
-				$path . 'test-folder/test-file.txt',
+				$plugin_path . 'test-folder/test-file.txt',
 				'Example contents of a file',
 				FS_CHMOD_FILE // predefined mode settings for WP files
 			);
+
+			$this->find_wp_config( $wp_filesystem );
 		
 		}	
 		else {
 			/* don't have direct write access. Prompt user with our notice */
-			echo "don't have direct write access. Prompt user with our notice";
+			echo "You don't have direct write access :(";
 		}
 
 
@@ -130,9 +132,22 @@ class WP_Security_BP_Files {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function load_dependencies() {
+	private function find_wp_config( $wp_filesystem ) {
 
-		
+		//$file = 'wp-config.php';
+		$file = 'test-file.txt';
+
+		$root = get_home_path();
+		$defaul_path = $wp_filesystem->wp_content_dir();
+		if ( $wp_filesystem->exists( $root . $file ) ) {
+			$parent_root = trailingslashit( dirname( $root ) );
+			$wp_filesystem->move(
+				$root . $file,
+				$parent_root . $file,
+				true // Overwrites if exists
+			);
+		}
+
 	}
 
 	
