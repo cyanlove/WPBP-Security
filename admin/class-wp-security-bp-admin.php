@@ -113,7 +113,7 @@ class WP_Security_BP_Admin {
 		*
 		* NOTE:  Alternative menu locations are available via WordPress administration menu functions.
 		*
-		*        Administration Menus: http://codex.wordpress.org/Administration_Menus
+		* Administration Menus: http://codex.wordpress.org/Administration_Menus
 		*
 		*/
 		add_options_page( 'WordPress Security Best Practices Dashboard', 'WP Security BP', 'manage_options', $this->plugin_name, array( $this, 'display_plugin_setup_page' )

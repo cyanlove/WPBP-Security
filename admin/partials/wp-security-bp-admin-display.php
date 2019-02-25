@@ -23,3 +23,6 @@ foreach ( $users as $user ) {
         var_dump( $user );
     }
 }
+
+$plugin_name = 'wp-security-bp';
+$files = new WP_Security_BP_Files( $plugin_name, admin_url( 'options-general.php?page=' . $plugin_name ) );

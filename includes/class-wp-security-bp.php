@@ -112,6 +112,11 @@ class WP_Security_BP {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-i18n.php';
 
 		/**
+		 * The class responsible for reading and writing files.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-files.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-security-bp-admin.php';
