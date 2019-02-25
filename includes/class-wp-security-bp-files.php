@@ -52,6 +52,51 @@ class WP_Security_BP_Files {
 	protected $nonce_action_name;
 
 	/**
+	 * Short desc
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $wp_config    The name of the file wp-config.php
+	 */
+	protected $wp_config;
+
+	/**
+	 * Short desc
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $htaccess    The name of the file .htaccess
+	 */
+	protected $htaccess;
+
+	/**
+	 * Short desc
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      object    $wp_filesystem    The Object $wp_filesystem
+	 */
+	protected $wp_filesystem;
+
+	/**
+	 * Short desc
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $root    The uri of the installation root
+	 */
+	protected $root;
+
+	/**
+	 * Short desc
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $parent_root    The uri of the parent installation root
+	 */
+	protected $parent_root;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -63,6 +108,7 @@ class WP_Security_BP_Files {
 		$this->plugin_name = $plugin_name;
 		$this->request_uri = $request_uri;
 		$this->nonce_action_name = 'wp-security-bp-file-access';
+		$this->wp_config = 'wp-config.php';
 
 		$access_type = get_filesystem_method();
 		if ( $access_type === 'direct' ) {
@@ -83,6 +129,12 @@ class WP_Security_BP_Files {
 
 			// call global $wp_filesystem variable
 			global $wp_filesystem;
+			$this->wp_filesystem = $wp_filesystem;
+
+			// define root dir
+			$this->root = $wp_filesystem->abspath();
+			// define parent root dir
+			$this->parent_root = trailingslashit( dirname( $this->root ) );
 
 			// get the plugin directory path
 			$plugin_path = trailingslashit( $wp_filesystem->wp_plugins_dir() . $plugin_name );
@@ -97,7 +149,9 @@ class WP_Security_BP_Files {
 				FS_CHMOD_FILE // predefined mode settings for WP files
 			);
 
-			$this->find_wp_config( $wp_filesystem );
+			$wp_config_path = $this->find_wp_config();
+
+			echo $wp_config_path;
 		
 		}	
 		else {
@@ -132,12 +186,23 @@ class WP_Security_BP_Files {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function find_wp_config( $wp_filesystem ) {
+	private function find_wp_config() {
 
+		if ( $this->wp_filesystem->exists( $this->root . $this->wp_config ) ) {
+			return $this->root;
+		}
+		elseif ( $this->wp_filesystem->exists( $this->parent_root . $this->wp_config ) ) {
+			return $this->parent_root;
+		}
+		else {
+			return false;
+		}
+
+		/*
 		//$file = 'wp-config.php';
 		$file = 'test-file.txt';
 
-		$root = get_home_path();
+		$root = $wp_filesystem->abspath();
 		$defaul_path = $wp_filesystem->wp_content_dir();
 		if ( $wp_filesystem->exists( $root . $file ) ) {
 			$parent_root = trailingslashit( dirname( $root ) );
@@ -147,6 +212,21 @@ class WP_Security_BP_Files {
 				true // Overwrites if exists
 			);
 		}
+		*/
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function evaluate_wp_config_path() {
+
+		
 
 	}
 
