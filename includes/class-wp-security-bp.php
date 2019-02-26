@@ -169,6 +169,9 @@ class WP_Security_BP {
 		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
 		$this->loader->add_filter( 'plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_action_links' );
 
+		// Run files test
+		$this->loader->add_action( 'wp_ajax_' . $this->plugin_name, $plugin_admin, 'run_files_test' );
+
 	}
 
 	/**

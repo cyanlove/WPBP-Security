@@ -41,6 +41,15 @@ class WP_Security_BP_Admin {
 	private $version;
 
 	/**
+	 * The 
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $admin_url    The url of this plugin.
+	 */
+	private $admin_url;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -51,6 +60,7 @@ class WP_Security_BP_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->admin_url = admin_url( 'options-general.php?page=' . $this->plugin_name );
 
 	}
 
@@ -131,9 +141,22 @@ class WP_Security_BP_Admin {
 		*  Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
 		*/
 	$settings_link = array(
-		'<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __( 'Settings', $this->plugin_name ) . '</a>',
+		'<a href="' . $this->admin_url . '">' . __( 'Settings', $this->plugin_name ) . '</a>',
 	);
 	return array_merge( $settings_link, $links );
+
+	}
+
+	/**
+	 * This function fires the files test
+	 *
+	 * @since    1.0.0
+	 */
+
+	public function run_files_test() {
+		
+		$files = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
+		$files->check_wp_config();
 
 	}
 

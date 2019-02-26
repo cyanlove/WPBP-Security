@@ -97,6 +97,15 @@ class WP_Security_BP_Files {
 	protected $parent_root;
 
 	/**
+	 * Short desc
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $json    The array that will be passed as a JSON file to the admin
+	 */
+	protected $json;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -109,6 +118,12 @@ class WP_Security_BP_Files {
 		$this->request_uri = $request_uri;
 		$this->nonce_action_name = 'wp-security-bp-file-access';
 		$this->wp_config = 'wp-config.php';
+		$this->json = array(
+			'status'   => 'fail',
+			'message'  => '',
+			'button'   => false,
+			'uri'      => '',
+		);
 
 		$access_type = get_filesystem_method();
 		if ( $access_type === 'direct' ) {
@@ -137,21 +152,17 @@ class WP_Security_BP_Files {
 			$this->parent_root = trailingslashit( dirname( $this->root ) );
 
 			// get the plugin directory path
-			$plugin_path = trailingslashit( $wp_filesystem->wp_plugins_dir() . $plugin_name );
+			$plugin_path = trailingslashit( $this->wp_filesystem->wp_plugins_dir() . $this->plugin_name );
 
 			// make a directory
-			$wp_filesystem->mkdir( $plugin_path. 'test-folder' );
+			$this->wp_filesystem->mkdir( $plugin_path. 'test-folder' );
 
 			// make a file and write content
-			$wp_filesystem->put_contents(
+			$this->wp_filesystem->put_contents(
 				$plugin_path . 'test-folder/test-file.txt',
 				'Example contents of a file',
 				FS_CHMOD_FILE // predefined mode settings for WP files
 			);
-
-			$wp_config_path = $this->find_wp_config();
-
-			echo $wp_config_path;
 		
 		}	
 		else {
@@ -189,14 +200,50 @@ class WP_Security_BP_Files {
 	private function find_wp_config() {
 
 		if ( $this->wp_filesystem->exists( $this->root . $this->wp_config ) ) {
-			return $this->root;
-		}
-		elseif ( $this->wp_filesystem->exists( $this->parent_root . $this->wp_config ) ) {
-			return $this->parent_root;
+			return true;
 		}
 		else {
 			return false;
 		}
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function check_wp_config() {
+
+		$is_in_root = $this->find_wp_config();
+		
+		if ( $is_in_root ) {
+			$this->json['message'] = __( 'Very bad guy', $this->plugin_name );
+			$this->json['button'] = true;
+			$this->json['uri'] = 'url-to-fix';
+		}
+		else {
+			$this->json['status'] = 'passed';
+			$this->json['message'] = __( 'Good job!!!', $this->plugin_name );
+		}
+
+		wp_send_json( (object) $this->json );
+		wp_die();
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function move_wp_config() {
 
 		/*
 		//$file = 'wp-config.php';
@@ -215,21 +262,5 @@ class WP_Security_BP_Files {
 		*/
 
 	}
-
-	/**
-	 * Short desc
-	 *
-	 * Long desc
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function evaluate_wp_config_path() {
-
-		
-
-	}
-
-	
 
 }
