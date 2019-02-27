@@ -170,7 +170,9 @@ class WP_Security_BP {
 		$this->loader->add_filter( 'plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_action_links' );
 
 		// Run files test
-		$this->loader->add_action( 'wp_ajax_' . $this->plugin_name, $plugin_admin, 'run_files_test' );
+		if ( wp_doing_ajax() ) {
+			$this->loader->add_action( 'wp_ajax_' . $this->plugin_name, $plugin_admin, 'run_files_test' );
+		}
 
 	}
 

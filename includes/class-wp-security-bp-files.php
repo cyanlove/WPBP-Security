@@ -155,14 +155,14 @@ class WP_Security_BP_Files {
 			$plugin_path = trailingslashit( $this->wp_filesystem->wp_plugins_dir() . $this->plugin_name );
 
 			// make a directory
-			$this->wp_filesystem->mkdir( $plugin_path. 'test-folder' );
+			//$this->wp_filesystem->mkdir( $plugin_path . 'test-folder' );
 
 			// make a file and write content
-			$this->wp_filesystem->put_contents(
+			/* $this->wp_filesystem->put_contents(
 				$plugin_path . 'test-folder/test-file.txt',
 				'Example contents of a file',
 				FS_CHMOD_FILE // predefined mode settings for WP files
-			);
+			); */
 		
 		}	
 		else {
@@ -230,7 +230,7 @@ class WP_Security_BP_Files {
 			$this->json['message'] = __( 'Good job!!!', $this->plugin_name );
 		}
 
-		wp_send_json( (object) $this->json );
+		wp_send_json( $this->json );
 		wp_die();
 
 	}
