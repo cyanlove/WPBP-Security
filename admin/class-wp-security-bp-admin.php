@@ -69,7 +69,7 @@ class WP_Security_BP_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles( $hook_suffix ) {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -82,8 +82,9 @@ class WP_Security_BP_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-security-bp-admin.css', array(), $this->version, 'all' );
+		if ( $hook_suffix === 'settings_page_wp-security-bp' ) {
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-security-bp-admin.css', array(), $this->version, 'all' );
+		}
 
 	}
 
@@ -92,7 +93,7 @@ class WP_Security_BP_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts( $hook_suffix ) {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -105,9 +106,10 @@ class WP_Security_BP_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, false );
-
+		if ( $hook_suffix === 'settings_page_wp-security-bp' ) {
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, false );
+		}
+		
 	}
 
 	/**
