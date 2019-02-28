@@ -41,6 +41,15 @@ class WP_Security_BP_Admin {
 	private $version;
 
 	/**
+	 * The 
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $admin_url    The url of this plugin.
+	 */
+	private $admin_url;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -51,6 +60,7 @@ class WP_Security_BP_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->admin_url = admin_url( 'options-general.php?page=' . $this->plugin_name );
 
 	}
 
@@ -59,7 +69,7 @@ class WP_Security_BP_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles( $hook_suffix ) {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -72,8 +82,9 @@ class WP_Security_BP_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-security-bp-admin.css', array(), $this->version, 'all' );
+		if ( $hook_suffix === 'settings_page_wp-security-bp' ) {
+			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-security-bp-admin.css', array(), $this->version, 'all' );
+		}
 
 	}
 
@@ -82,7 +93,7 @@ class WP_Security_BP_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
+	public function enqueue_scripts( $hook_suffix ) {
 
 		/**
 		 * This function is provided for demonstration purposes only.
@@ -95,9 +106,10 @@ class WP_Security_BP_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, false );
-
+		if ( $hook_suffix === 'settings_page_wp-security-bp' ) {
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, false );
+		}
+		
 	}
 
 	/**
@@ -113,7 +125,7 @@ class WP_Security_BP_Admin {
 		*
 		* NOTE:  Alternative menu locations are available via WordPress administration menu functions.
 		*
-		*        Administration Menus: http://codex.wordpress.org/Administration_Menus
+		* Administration Menus: http://codex.wordpress.org/Administration_Menus
 		*
 		*/
 		add_options_page( 'WordPress Security Best Practices Dashboard', 'WP Security BP', 'manage_options', $this->plugin_name, array( $this, 'display_plugin_setup_page' )
@@ -131,9 +143,22 @@ class WP_Security_BP_Admin {
 		*  Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
 		*/
 	$settings_link = array(
-		'<a href="' . admin_url( 'options-general.php?page=' . $this->plugin_name ) . '">' . __( 'Settings', $this->plugin_name ) . '</a>',
+		'<a href="' . $this->admin_url . '">' . __( 'Settings', $this->plugin_name ) . '</a>',
 	);
 	return array_merge( $settings_link, $links );
+
+	}
+
+	/**
+	 * This function fires the files test
+	 *
+	 * @since    1.0.0
+	 */
+
+	public function run_files_test() {
+		
+		$files = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
+		$files->check_wp_config();
 
 	}
 

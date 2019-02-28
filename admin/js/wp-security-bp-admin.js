@@ -29,4 +29,19 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	jQuery(document).ready(function($) {
+
+		var data = {
+			'action': 'wp-security-bp',
+			'whatever': 1234
+		};
+
+		// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+		jQuery.post(ajaxurl, data, function(response) {
+			console.log('Got this from the server: ' + JSON.stringify(response));
+		});
+	});
+
 })( jQuery );
+
+

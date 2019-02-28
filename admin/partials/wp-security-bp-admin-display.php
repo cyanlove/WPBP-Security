@@ -14,12 +14,8 @@
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
-<h1>OLAKEASE</h1>
+<h1>WordPress Security Best Practices</h1>
 <?php
 
-$users = get_users( array( 'include' => array( 2, 3 ) ) );
-foreach ( $users as $user ) {
-    if ( true ) {
-        var_dump( $user );
-    }
-}
+/* $plugin_name = 'wp-security-bp';
+$files = new WP_Security_BP_Files( $plugin_name, admin_url( 'options-general.php?page=' . $plugin_name ) ); */
