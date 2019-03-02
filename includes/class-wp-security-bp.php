@@ -117,6 +117,11 @@ class WP_Security_BP {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-files.php';
 
 		/**
+		 * The class responsible for scan and evaluate users.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-users.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-security-bp-admin.php';
@@ -171,8 +176,9 @@ class WP_Security_BP {
 
 		// Run files test
 		if ( wp_doing_ajax() ) {
-			$this->loader->add_action( 'wp_ajax_' . $this->plugin_name, $plugin_admin, 'run_files_test' );
+			$this->loader->add_action( 'wp_ajax_' . $this->plugin_name, $plugin_admin, 'final_json' );
 		}
+
 
 	}
 

@@ -230,8 +230,7 @@ class WP_Security_BP_Files {
 			$this->json['message'] = __( 'Good job!!!', $this->plugin_name );
 		}
 
-		wp_send_json( $this->json );
-		wp_die();
+		return json_encode($this->json);
 
 	}
 

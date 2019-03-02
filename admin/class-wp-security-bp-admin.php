@@ -150,16 +150,22 @@ class WP_Security_BP_Admin {
 	}
 
 	/**
-	 * This function fires the files test
+	 * This function calls all functions and agroup all return in to one json.
 	 *
 	 * @since    1.0.0
 	 */
-
-	public function run_files_test() {
-		
+	public function final_json(){
+		//Class Files calls:
 		$files = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
-		$files->check_wp_config();
+		$json_return[] = $files->check_wp_config();
+		//Class Users calls:
+		$users = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
+		$json_return[] = $users->check_users_ids();
+		//Json to view:
+		$json_final = $json_return;
 
+		wp_send_json( $json_final );
+		wp_die();
 	}
 
 	/**
