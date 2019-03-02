@@ -37,24 +37,6 @@ class WP_Security_BP_Users {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $request_uri    The URI where the request is made from
-	 */
-	protected $request_uri;
-
-	/**
-	 * Short desc
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string    $nonce_action_name    The action for the nonce creation
-	 */
-	protected $nonce_action_name;
-
-	/**
-	 * Short desc
-	 *
-	 * @since    1.0.0
-	 * @access   protected
 	 * @var      string    $users    The array of all users info
 	 */
 	protected $users;
@@ -66,7 +48,7 @@ class WP_Security_BP_Users {
 	 * @access   protected
 	 * @var      integer    $range_scan_id  The integer to set the range to scan of users id's.
 	 */
-	protected $range_scan_id = 5;
+	protected $range_scan_id;
 
 	/**
 	 * Short desc
@@ -87,8 +69,7 @@ class WP_Security_BP_Users {
 	public function __construct( $plugin_name, $request_uri ) {
 
 		$this->plugin_name = $plugin_name;
-		$this->request_uri = $request_uri;
-		$this->nonce_action_name = 'wp-security-bp-users-access';
+		$this->range_scan_id = 5;
 		$this->users = get_users();
 		$this->json = array(
 			'status'   => 'fail',
