@@ -84,7 +84,7 @@ class WP_Security_BP_Users {
 		$this->json['short_desc'] = __( 'Check admin id' , $this->plugin_name );
 
 		foreach ( $this->users as $user ){
-			if ( $user->ID > $this->range_scan_id){
+			if ( $user->ID <= $this->range_scan_id){
 				$this->json['message'] = __( 'Danger IDS!!!', $this->plugin_name );
 				$this->json['button'] = true;
 				$this->json['uri'] = 'url-to-fix';

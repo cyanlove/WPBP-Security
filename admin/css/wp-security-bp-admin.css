@@ -21,7 +21,6 @@
   align-items: center;
   font-weight: bold;
 }
-
 #fix{
  border: none;
  outline: none;
@@ -31,24 +30,18 @@
  background: #ECE9E9;
  cursor: pointer;
 }
-
 .failed{
-	background: #DC2222;
+	background: #E81919;
 }
-
+.failed:hover {
+  background: #FF0101
+}
 .passed{
-	background: #39D172;
+	background: #27DB6B;
 }
-
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
-.active, .passed:hover {
-  background: #3EDE7A
+.passed:hover {
+  background: #42F384;
 }
-.active, .fail:hover {
-  background: #FF3030
-}
-
-/* Style the accordion panel. Note: hidden by default */
 .panel {
   display: none;
   background-color: #C3C2C2;

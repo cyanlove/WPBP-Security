@@ -40,7 +40,7 @@ new Vue({
 			});
 		},
 		togAccordeon(event){
-			event.target.classList.toggle("active");
+			
 		    var panel = event.target.nextElementSibling;
 		    if (panel.style.display === "block") {
 		      panel.style.display = "none";
