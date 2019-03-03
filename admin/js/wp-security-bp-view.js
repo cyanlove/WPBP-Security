@@ -5,7 +5,7 @@ new Vue({
 			<div id="container" v-for="item in info">
 				<div v-bind:class="[ item.status === 'fail' ? 'failed' : 'passed' ]"  class="accordion" @click="togAccordeon">
 					{{ item.short_desc }} 
-					<button id="fix" v-show="item.status === 'fail'">
+					<button id="fix" v-show="item.status === 'fail'" @click="fix(item.uri)">
 						FIX
 					</button>
 				</div>
@@ -39,9 +39,14 @@ new Vue({
 				console.log(error);
 			});
 		},
+		fix(e){
+			alert(e)
+		},
 		togAccordeon(event){
-			
-		    var panel = event.target.nextElementSibling;
+			var panel = event.target.nextElementSibling;
+			if(event.target.id == 'fix'){
+				return
+			}
 		    if (panel.style.display === "block") {
 		      panel.style.display = "none";
 		    } else {
