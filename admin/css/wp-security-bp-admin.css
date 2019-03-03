@@ -2,3 +2,58 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+ #container{
+  width: 80%;
+  box-sizing: border-box;
+}
+.accordion {
+  background-color: #eee;
+  color: #1A1A1A;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  height: 30px;
+  transition: 0.4s;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+}
+
+#fix{
+ border: none;
+ outline: none;
+ padding: 4px;
+ width: 100px;
+ justify-content: center;
+ background: #ECE9E9;
+ cursor: pointer;
+}
+
+.fail{
+	background: #DC2222;
+}
+
+.passed{
+	background: #39D172;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .passed:hover {
+  background: #3EDE7A
+}
+.active, .fail:hover {
+  background: #FF3030
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+  display: none;
+  background-color: #C3C2C2;
+  overflow: hidden;
+  transition: 0.4s;
+  width: 100%;
+  padding: 10px;
+}
