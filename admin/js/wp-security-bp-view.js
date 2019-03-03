@@ -3,14 +3,11 @@ new Vue({
 	template: `
 		<div>
 			<div id="container" v-for="item in info">
-				<div v-if="item.status == 'fail'" class="accordion fail" @click="togAccordeon">
+				<div v-bind:class="[ item.status === 'fail' ? 'failed' : 'passed' ]"  class="accordion" @click="togAccordeon">
 					{{ item.short_desc }} 
-					<button id="fix" value="{{ item.uri }}">
+					<button id="fix" v-show="item.status === 'fail'">
 						FIX
 					</button>
-				</div>
-				<div v-else class="accordion passed">
-					{{ item.short_desc }}
 				</div>
 				<div class="panel">
 					<div class="panel-content">
