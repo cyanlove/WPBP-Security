@@ -154,7 +154,7 @@ class WP_Security_BP_Database {
 			$this->json['message'] = sprintf(
 				/* translators: %s: database name, plugin name */
 				__(
-					'Your DB name (%s) is too comon',
+					'Your DB name (%s) is too common',
 					'%s'
 				),
 				$this->db_name,

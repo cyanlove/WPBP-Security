@@ -163,7 +163,7 @@ class WP_Security_BP_Admin {
 		$json_return[] = $users->check_users_ids();
 		//Class Database checks:
 		$db = new WP_Security_BP_Database( $this->plugin_name );
-		//$json_return[] = $db->check_name();
+		$json_return[] = $db->check_name();
 
 		//Json to view:
 		$json_final = $json_return;
