@@ -1,3 +1,4 @@
+
 <?php
 
 /**
@@ -164,6 +165,9 @@ class WP_Security_BP_Admin {
 		//Class Users calls:
 		$users = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
 		$json_return[] = $users->check_users_ids();
+    //Class Database checks:
+		$db = new WP_Security_BP_Database( $this->plugin_name );
+		$json_return[] = $db->check_name();
 		
 		wp_send_json( $json_return );
 		wp_die();
