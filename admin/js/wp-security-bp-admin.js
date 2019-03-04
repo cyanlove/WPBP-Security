@@ -28,7 +28,7 @@
 	 * Although scripts in the WordPress core, Plugins and Themes may be
 	 * practising this, we should strive to set a better example in our own work.
 	 */
-
+	 
 	jQuery(document).ready(function($) {
 
 		var data = {
@@ -40,6 +40,7 @@
 		jQuery.post(ajaxurl, data, function(response) {
 			console.log('Got this from the server: ' + response);
 		});
+		
 	});
 
 })( jQuery );

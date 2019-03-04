@@ -119,10 +119,11 @@ class WP_Security_BP_Files {
 		$this->nonce_action_name = 'wp-security-bp-file-access';
 		$this->wp_config = 'wp-config.php';
 		$this->json = array(
-			'status'   => 'fail',
-			'message'  => '',
-			'button'   => false,
-			'uri'      => '',
+			'status'   		=> 'fail',
+			'short_desc'	=> '',	
+			'message'  		=> '',
+			'button'   		=> false,
+			'uri'      		=> '',
 		);
 
 		$access_type = get_filesystem_method();
@@ -220,6 +221,8 @@ class WP_Security_BP_Files {
 
 		$is_in_root = $this->find_wp_config();
 		
+		$this->json['short_desc'] = __( 'Check Wp-config.php' , $this->plugin_name );
+		
 		if ( $is_in_root ) {
 			$this->json['message'] = __( 'Very bad guy', $this->plugin_name );
 			$this->json['button'] = true;
@@ -230,7 +233,7 @@ class WP_Security_BP_Files {
 			$this->json['message'] = __( 'Good job!!!', $this->plugin_name );
 		}
 
-		return json_encode($this->json);
+		return $this->json;
 
 	}
 
