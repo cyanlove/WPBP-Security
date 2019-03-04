@@ -78,7 +78,6 @@ class WP_Security_BP {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-
 	}
 
 	/**
@@ -120,6 +119,11 @@ class WP_Security_BP {
 		 * The class responsible for scan and evaluate users.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-users.php';
+
+		/**
+		 * The class responsible for scan and evaluate users.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-database.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
@@ -174,11 +178,31 @@ class WP_Security_BP {
 		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
 		$this->loader->add_filter( 'plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_action_links' );
 
-		// Run files test
+		/**
+		 * Register Ajax calls.
+		 * 
+		 * For every Ajax request get the 'action' value sent through POST and register
+		 * the appropiate hook and method.
+		 * 
+		 */
 		if ( wp_doing_ajax() ) {
-			$this->loader->add_action( 'wp_ajax_' . $this->plugin_name, $plugin_admin, 'final_json' );
-		}
+			
+			$action = empty( $_POST['action'] ) ? '' : $_POST['action'];
 
+			/**
+			 * This array matches the 'action' value sent with the ajax request with the
+			 * corresponding method of the WP_Security_BP_Admin class that should be fired.
+			 */
+			$actions = array(
+				'example_action' => 'example_admin_method',
+				'final_json' => 'final_json',
+			);
+
+			if ( array_key_exists( $action, $actions ) ) {
+				$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, $actions[$action] );
+			}
+
+		}
 
 	}
 

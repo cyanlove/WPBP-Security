@@ -15,5 +15,8 @@
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->
 <h1>WordPress Security Best Practices</h1>
-<?php
+<div id="app">
+	
+</div>
+
 
