@@ -64,22 +64,24 @@ class WP_Security_BP_Users {
 	 *
 	 * @since    1.0.0
 	 * @param    string    $plugin_name       The name of this plugin.
-	 * @param    string    $request_uri       The URI from the request is made.
 	 */
-	public function __construct( $plugin_name, $request_uri ) {
+	public function __construct( $plugin_name) {
 
 		$this->plugin_name = $plugin_name;
 		$this->range_scan_id = 5;
 		$this->users = get_users();
 		$this->json = array(
-			'status'   => 'fail',
-			'message'  => '',
-			'button'   => false,
-			'uri'      => '',
+			'status'   		=> 'fail',
+			'short_desc'	=> '',	
+			'message'  		=> '',
+			'button'   		=> false,
+			'uri'      		=> '',
 		);
 	}
 
 	public function check_users_ids(){
+
+		$this->json['short_desc'] = __( 'Check admin id' , $this->plugin_name );
 
 		foreach ( $this->users as $user ){
 			if ( $user->ID <= $this->range_scan_id){
@@ -93,6 +95,6 @@ class WP_Security_BP_Users {
 			}
 		}
 		
-		return json_encode($this->json);
+		return $this->json;
 	}
 }
