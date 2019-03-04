@@ -1,3 +1,4 @@
+
 <?php
 
 /**
@@ -107,9 +108,12 @@ class WP_Security_BP_Admin {
 		 * class.
 		 */
 		if ( $hook_suffix === 'settings_page_wp-security-bp' ) {
-			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, false );
-		}
-		
+			/*wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, true );*/
+			wp_enqueue_script('vue', 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js', array('jquery'), '2.5.17', true);
+			wp_enqueue_script('axios', 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js', array('jquery'), '0.18.0', true);
+			wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-view.js');
+			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-view.js', [], $this->version, true );
+		}		
 	}
 
 	/**
@@ -161,14 +165,11 @@ class WP_Security_BP_Admin {
 		//Class Users calls:
 		$users = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
 		$json_return[] = $users->check_users_ids();
-		//Class Database checks:
+    //Class Database checks:
 		$db = new WP_Security_BP_Database( $this->plugin_name );
 		$json_return[] = $db->check_name();
-
-		//Json to view:
-		$json_final = $json_return;
-
-		wp_send_json( $json_final );
+		
+		wp_send_json( $json_return );
 		wp_die();
 	}
 
