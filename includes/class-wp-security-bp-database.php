@@ -112,19 +112,12 @@ class WP_Security_BP_Database {
 	public function __construct( $plugin_name ) {
 
 		$this->plugin_name = $plugin_name;
-		$this->json        = array(
-			'status'     => 'fail',
-			'short_desc' => '',
-			'message'    => '',
-			'button'     => false,
-			'uri'        => '',
-		);
 		//$this->domain = ***
 		global $wpdb;
 		$this->db_name       = $wpdb->dbname;
 		$this->db_version    = $wpdb->db_version();
 		$this->tables_prefix = $wpdb->prefix;
-
+		$this->json          = new WP_Security_BP_JSON( $this->plugin_name );
 	}
 
 	public function check_name() {
@@ -135,44 +128,15 @@ class WP_Security_BP_Database {
 		This will check removing every _ , - , . (at least)
 		and even part of string coincidences.
 		*/
-		$check = in_array( $this->db_name, $this->db_names_blacklist );
+		$check = ! in_array( $this->db_name, $this->db_names_blacklist );
 
-		/*
-		https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/50
-		http://ottopress.com/2012/internationalization-youre-probably-doing-it-wrong/
-
-		this two explains why we must stop passing variables into translation functions
-		(they won't be evaluated so the final string will contain the variable name itself)
-		*/
-		/*
-		we better use a class-METHOD to define all of this JSON (DON'T REPEAT YOURSELF).
-		This way will be easier to redefine retuns all in one step.
-		*/
 		if ( $check ) {
-			$this->json['button']  = true;
-			$this->json['uri']     = 'url-to-fix';
-			$this->json['message'] = sprintf(
-				/* translators: %s: database name, plugin name */
-				__(
-					'Your DB name (%s) is too common',
-					'%s'
-				),
-				$this->db_name,
-				$this->plugin_name
-			);
+			$this->json->pass( 'Your database name ( ' . $this->db_name . ' ) is fine' );
 		} else {
-			$this->json['status']  = 'passed';
-			$this->json['message'] = sprintf(
-				/* translators: %s: plugin name */
-				__(
-					'Your DB name is secure',
-					'%s'
-				),
-				$this->plugin_name
-			);
+			$this->json->fail( 'Your database name ( ' . $this->db_name . ' ) is not secure enough' );
 		}
 
-		return $this->json;
+		return $this->json->json;
 	}
 
 	public function check_user() {}
