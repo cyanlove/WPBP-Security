@@ -119,7 +119,7 @@ class WP_Security_BP_Admin {
 		 */
 		if ( $hook_suffix === $this->hook_suffix ) {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, false );
-      wp_enqueue_script( $this->plugin_name . '-vue', 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js', array(), '2.5.17', true );
+			wp_enqueue_script( $this->plugin_name . '-vue', 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js', array(), '2.5.17', true );
 			wp_enqueue_script( $this->plugin_name . '-axios', 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js', array(), '0.18.0', true );
 			wp_enqueue_script( $this->plugin_name . '-view', plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-view.js', array(), $this->version, true );
 		}
@@ -180,7 +180,7 @@ class WP_Security_BP_Admin {
 		//Class Users calls:
 		$users = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
 		$json_return[] = $users->check_users_ids();
-    //Class Database checks:
+    	//Class Database checks:
 		$db = new WP_Security_BP_Database( $this->plugin_name );
 		$json_return[] = $db->check_name();
 		
