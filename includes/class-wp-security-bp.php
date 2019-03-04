@@ -78,7 +78,6 @@ class WP_Security_BP {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-
 	}
 
 	/**
@@ -120,6 +119,11 @@ class WP_Security_BP {
 		 * The class responsible for scan and evaluate users.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-users.php';
+
+		/**
+		 * The class responsible for scan and evaluate users.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-database.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
