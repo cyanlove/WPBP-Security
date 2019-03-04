@@ -97,13 +97,13 @@ class WP_Security_BP_Files {
 	protected $parent_root;
 
 	/**
-	 * Short desc
+	 * This will be deprecated
 	 *
 	 * @since    1.0.0
 	 * @access   protected
 	 * @var      array    $json    The array that will be passed as a JSON file to the admin
 	 */
-	protected $json;
+	//protected $json;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -118,15 +118,15 @@ class WP_Security_BP_Files {
 		$this->request_uri = $request_uri;
 		$this->nonce_action_name = 'wp-security-bp-file-access';
 		$this->wp_config = 'wp-config.php';
-		$this->json = array(
+		/* $this->json = array(
 			'status'   		=> 'fail',
 			'short_desc'	=> '',	
 			'message'  		=> '',
 			'button'   		=> false,
 			'uri'      		=> '',
-		);
+		); */
 
-		$access_type = get_filesystem_method();
+		$access_type = function_exists( 'get_filesystem_method' ) ? get_filesystem_method() : '';
 		if ( $access_type === 'direct' ) {
 
 			// request credentials
@@ -196,32 +196,25 @@ class WP_Security_BP_Files {
 	 * Long desc
 	 *
 	 * @since    1.0.0
-	 * @access   private
+	 * @access   public
 	 */
-	private function find_wp_config() {
+	public function find_wp_config() {
 
-		if ( $this->wp_filesystem->exists( $this->root . $this->wp_config ) ) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return $this->wp_filesystem->exists( $this->root . $this->wp_config );
 
 	}
 
 	/**
-	 * Short desc
+	 * This will be deprecated
 	 *
 	 * Long desc
 	 *
 	 * @since    1.0.0
 	 * @access   public
 	 */
-	public function check_wp_config() {
+	/* public function check_wp_config() {
 
 		$is_in_root = $this->find_wp_config();
-		
-		$this->json['short_desc'] = __( 'Check Wp-config.php' , $this->plugin_name );
 		
 		if ( $is_in_root ) {
 			$this->json['message'] = __( 'Very bad guy', $this->plugin_name );
@@ -232,10 +225,10 @@ class WP_Security_BP_Files {
 			$this->json['status'] = 'passed';
 			$this->json['message'] = __( 'Good job!!!', $this->plugin_name );
 		}
+		wp_send_json( $this->json );
+		wp_die();
 
-		return $this->json;
-
-	}
+	} */
 
 	/**
 	 * Short desc
@@ -243,26 +236,14 @@ class WP_Security_BP_Files {
 	 * Long desc
 	 *
 	 * @since    1.0.0
-	 * @access   private
+	 * @access   public
 	 */
-	private function move_wp_config() {
-
-		/*
-		//$file = 'wp-config.php';
-		$file = 'test-file.txt';
-
-		$root = $wp_filesystem->abspath();
-		$defaul_path = $wp_filesystem->wp_content_dir();
-		if ( $wp_filesystem->exists( $root . $file ) ) {
-			$parent_root = trailingslashit( dirname( $root ) );
-			$wp_filesystem->move(
-				$root . $file,
-				$parent_root . $file,
-				true // Overwrites if exists
-			);
-		}
-		*/
-
+	public function move_wp_config() {
+		$this->wp_filesystem->move(
+			$this->root . $this->wp_config,
+			$this->parent_root . $this->wp_config,
+			false // Don't overwrites if exists
+		);
 	}
 
 }

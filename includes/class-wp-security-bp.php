@@ -196,6 +196,7 @@ class WP_Security_BP {
 			$actions = array(
 				'example_action' => 'example_admin_method',
 				'wp-security-bp' => 'final_json',
+				'fix_wp_config' => 'fix_wp_config',
 			);
 
 			if ( array_key_exists( $action, $actions ) ) {

@@ -40,7 +40,17 @@ new Vue({
 			});
 		},
 		fix(e){
-			alert(e)
+			var params = new URLSearchParams();
+			params.append('action', e);
+
+			axios.post(ajaxurl, params)
+			.then( response => {
+				this.info = response.data;
+				console.log(this.info)
+			})
+			.catch( error => {
+				console.log(error);
+			});
 		},
 		togAccordeon(event){
 			var panel = event.target.nextElementSibling;
