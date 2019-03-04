@@ -42,6 +42,7 @@ new Vue({
 		fix(e){
 			var params = new URLSearchParams();
 			params.append('action', e);
+			params.append('do-shit', 'file-shit');
 
 			axios.post(ajaxurl, params)
 			.then( response => {

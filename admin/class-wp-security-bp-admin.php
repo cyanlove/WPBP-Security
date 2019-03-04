@@ -217,6 +217,23 @@ class WP_Security_BP_Admin {
 	}
 
 	/**
+	 * This function fires the fix wp-config.php feature
+	 *
+	 * @since    1.0.0
+	 */
+	public function fix_stuff() {
+
+		if ( $_POST['do-shit'] === 'file-shit' ) {
+			$files = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
+			$files->move_wp_config();
+			$this->final_json();
+		} else {
+			wp_die("this shit doesn't work :(");
+		}
+		
+	}
+
+	/**
 	 * Render the settings page for this plugin.
 	 *
 	 * @since    1.0.0
