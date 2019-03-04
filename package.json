@@ -1,0 +1,38 @@
+{
+  "name": "wp-security-bp",
+  "version": "1.0.0",
+  "description": "Secure your WordPress installation by just following the best practices.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "webpack --mode development",
+    "production": "webpack --mode production",
+    "start": "webpack-dev-server --progress --colors",
+    "watch": "npm run dev -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyanlove/wp-security-bp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cyanlove/wp-security-bp/issues"
+  },
+  "homepage": "https://github.com/cyanlove/wp-security-bp#readme",
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "babel-loader": "^8.0.5",
+    "babel-preset-env": "^1.7.0",
+    "vue": "^2.6.8",
+    "vue-loader": "^15.7.0",
+    "vue-template-compiler": "^2.6.8",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "dependencies": {
+    "@babel/core": "^7.3.4"
+  }
+}

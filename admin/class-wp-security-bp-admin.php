@@ -107,11 +107,8 @@ class WP_Security_BP_Admin {
 		 * class.
 		 */
 		if ( $hook_suffix === 'settings_page_wp-security-bp' ) {
-			/*wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, true );*/
-			wp_enqueue_script('vue', 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js', array('jquery'), '2.5.17', true);
-			wp_enqueue_script('axios', 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js', array('jquery'), '0.18.0', true);
-			wp_register_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-view.js');
-			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-view.js', [], $this->version, true );
+			/*wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, true );*/;
+			wp_enqueue_script( $this->plugin_name,'http://wp-security-bp.local/wp-content/plugins/wp-security-bp/dist/bundle.js', array( 'jquery' ), $this->version, true );
 		}		
 	}
 

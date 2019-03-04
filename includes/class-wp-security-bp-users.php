@@ -71,6 +71,7 @@ class WP_Security_BP_Users {
 		$this->range_scan_id = 5;
 		$this->users = get_users();
 		$this->json = array(
+			'id'			=> '',
 			'status'   		=> 'fail',
 			'short_desc'	=> '',	
 			'message'  		=> '',
@@ -81,6 +82,7 @@ class WP_Security_BP_Users {
 
 	public function check_users_ids(){
 
+		$this->json['id'] = uniqid();
 		$this->json['short_desc'] = __( 'Check admin id' , $this->plugin_name );
 
 		foreach ( $this->users as $user ){

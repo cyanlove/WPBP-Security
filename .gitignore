@@ -38,3 +38,6 @@ intermediate
 .idea
 cache
 health-check
+
+# node
+/node_modules

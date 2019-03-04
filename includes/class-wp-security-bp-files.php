@@ -119,6 +119,7 @@ class WP_Security_BP_Files {
 		$this->nonce_action_name = 'wp-security-bp-file-access';
 		$this->wp_config = 'wp-config.php';
 		$this->json = array(
+			'id'			=> '',
 			'status'   		=> 'fail',
 			'short_desc'	=> '',	
 			'message'  		=> '',
@@ -221,6 +222,7 @@ class WP_Security_BP_Files {
 
 		$is_in_root = $this->find_wp_config();
 		
+		$this->json['id'] = uniqid();
 		$this->json['short_desc'] = __( 'Check Wp-config.php' , $this->plugin_name );
 		
 		if ( $is_in_root ) {
