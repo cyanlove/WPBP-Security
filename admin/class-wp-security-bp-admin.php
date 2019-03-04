@@ -50,6 +50,15 @@ class WP_Security_BP_Admin {
 	private $admin_url;
 
 	/**
+	 * The hook suffix
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $hook_suffix    The hook suffix of this plugin.
+	 */
+	private $hook_suffix;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -68,6 +77,7 @@ class WP_Security_BP_Admin {
 	 * Register the stylesheets for the admin area.
 	 *
 	 * @since    1.0.0
+	 * @param    string    $hook_suffix    The page where it is supposed to be loaded.
 	 */
 	public function enqueue_styles( $hook_suffix ) {
 
@@ -82,7 +92,7 @@ class WP_Security_BP_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		if ( $hook_suffix === 'settings_page_wp-security-bp' ) {
+		if ( $hook_suffix === $this->hook_suffix ) {
 			wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-security-bp-admin.css', array(), $this->version, 'all' );
 		}
 
@@ -106,7 +116,7 @@ class WP_Security_BP_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-		if ( $hook_suffix === 'settings_page_wp-security-bp' ) {
+		if ( $hook_suffix === $this->hook_suffix ) {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, false );
 		}
 		
@@ -128,7 +138,12 @@ class WP_Security_BP_Admin {
 		* Administration Menus: http://codex.wordpress.org/Administration_Menus
 		*
 		*/
-		add_options_page( 'WordPress Security Best Practices Dashboard', 'WP Security BP', 'manage_options', $this->plugin_name, array( $this, 'display_plugin_setup_page' )
+		$this->hook_suffix = add_options_page( 
+			'WordPress Security Best Practices Dashboard',
+			'WP Security BP',
+			'manage_options',
+			$this->plugin_name,
+			array( $this, 'display_plugin_setup_page' )
 		);
 	}
 
