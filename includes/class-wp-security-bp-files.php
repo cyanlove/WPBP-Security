@@ -196,9 +196,9 @@ class WP_Security_BP_Files {
 	 * Long desc
 	 *
 	 * @since    1.0.0
-	 * @access   public
+	 * @access   private
 	 */
-	public function find_wp_config() {
+	private function find_wp_config() {
 
 		return $this->wp_filesystem->exists( $this->root . $this->wp_config );
 
@@ -212,23 +212,27 @@ class WP_Security_BP_Files {
 	 * @since    1.0.0
 	 * @access   public
 	 */
-	/* public function check_wp_config() {
+	public function check_wp_config() {
 
 		$is_in_root = $this->find_wp_config();
 		
 		if ( $is_in_root ) {
-			$this->json['message'] = __( 'Very bad guy', $this->plugin_name );
-			$this->json['button'] = true;
-			$this->json['uri'] = 'url-to-fix';
+			$response['status'] = 'fail';
+			$response['short_desc'] = 'Check wp-config.php location';
+			$response['message'] = __( 'The file wp-config.php is in default location, it is recommended to store this file on the parent directory', $this->plugin_name );
+			$response['button'] = true;
+			$response['uri'] = 'fix_wp_config';
 		}
 		else {
-			$this->json['status'] = 'passed';
-			$this->json['message'] = __( 'Good job!!!', $this->plugin_name );
+			$response['status'] = 'passed';
+			$response['short_desc'] = 'Check wp-config.php location';
+			$response['message'] = __( 'Good job, wp-config.php not on default location!!!', $this->plugin_name );
+			$response['button'] = false;
+			$response['uri'] = '';
 		}
-		wp_send_json( $this->json );
-		wp_die();
+		return $response;
 
-	} */
+	}
 
 	/**
 	 * Short desc

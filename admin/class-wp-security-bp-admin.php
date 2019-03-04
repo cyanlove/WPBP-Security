@@ -191,8 +191,8 @@ class WP_Security_BP_Admin {
 	 */
 	public function final_json(){
 		//Class Files calls:
-		//$files = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
-		$json_return[] = $this->check_wp_config();
+		$files = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
+		$json_return[] = $files->check_wp_config();
 		//Class Users calls:
 		$users = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
 		$json_return[] = $users->check_users_ids();
@@ -203,40 +203,7 @@ class WP_Security_BP_Admin {
 		wp_send_json( $json_return );
 		wp_die();
 	}
-
-	/**
-	 * Short desc
-	 *
-	 * Long desc
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function check_wp_config() {
-		$files = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
-		$is_in_root = $files->find_wp_config();
-		
-		$response = array();
-
-		if ( $is_in_root ) {
-			// in any case this is not a good practice, json should be a new instance every time
-			// but I hope this will be fixed with a json class
-			$response['status'] = 'fail';
-			$response['short_desc'] = 'Check wp-config.php location';
-			$response['message'] = __( 'The file wp-config.php is in default location, it is recommended to store this file on the parent directory', $this->plugin_name );
-			$response['button'] = true;
-			$response['uri'] = 'fix_wp_config';
-		}
-		else {
-			$response['status'] = 'passed';
-			$response['short_desc'] = 'Check wp-config.php location';
-			$response['message'] = __( 'Good job, wp-config.php not on default location!!!', $this->plugin_name );
-			$response['button'] = false;
-			$response['uri'] = '';
-		}
-		return $response;
-	}
-
+	
 	/**
 	 * This function fires the fix wp-config.php feature
 	 *
