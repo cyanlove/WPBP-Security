@@ -52,9 +52,11 @@ class WP_Security_BP_JSON {
 
 		$this->plugin_name = $plugin_name;
 		$this->json        = array(
-			'status'  => 'fail',
+			'status'  => 'passed',
 			'message' => '',
 			'button'  => false,
+			'trigger' => '',
+			'class'   => '', //JACO, take this and move on!
 		);
 	}
 
@@ -65,7 +67,7 @@ class WP_Security_BP_JSON {
 	 * @param    string    $message       The message of OK.
 	 */
 	public function pass( $message ) {
-		$this->json['button']  = true;
+		$this->json['button']  = false;
 		$this->json['message'] = sprintf(
 			/* translators: %s: message, plugin name */
 			__(
@@ -77,8 +79,10 @@ class WP_Security_BP_JSON {
 		);
 	}
 
-	public function fail( $message ) {
-		$this->json['button']  = false;
+	public function fail( $message, $fix ) {
+		$this->json['button']  = true;
+		$this->json['trigger'] = $fix;
+		$this->json['status']  = 'failed';
 		$this->json['message'] = sprintf(
 			/* translators: %s: message, plugin name */
 			__(

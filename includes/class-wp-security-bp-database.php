@@ -99,9 +99,9 @@ class WP_Security_BP_Database {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      array    $json    The array that will be passed as a JSON file to the admin.
+	 * @var      array    $response    The array that will be passed as a JSON file to the admin.
 	 */
-	protected $json;
+	protected $response;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -117,7 +117,7 @@ class WP_Security_BP_Database {
 		$this->db_name       = $wpdb->dbname;
 		$this->db_version    = $wpdb->db_version();
 		$this->tables_prefix = $wpdb->prefix;
-		$this->json          = new WP_Security_BP_JSON( $this->plugin_name );
+		$this->response      = new WP_Security_BP_JSON( $this->plugin_name );
 	}
 
 	public function check_name() {
@@ -131,12 +131,12 @@ class WP_Security_BP_Database {
 		$check = ! in_array( $this->db_name, $this->db_names_blacklist );
 
 		if ( $check ) {
-			$this->json->pass( 'Your database name ( ' . $this->db_name . ' ) is fine' );
+			$this->response->pass( 'Your database name ( ' . $this->db_name . ' ) is fine' );
 		} else {
-			$this->json->fail( 'Your database name ( ' . $this->db_name . ' ) is not secure enough' );
+			$this->response->fail( 'Your database name ( ' . $this->db_name . ' ) is not secure enough' );
 		}
 
-		return $this->json->json;
+		return $this->response->json;
 	}
 
 	public function check_user() {}
