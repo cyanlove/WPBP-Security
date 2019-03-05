@@ -32,7 +32,7 @@
 	jQuery(document).ready(function($) {
 
 		var data = {
-			'action': 'wp-security-bp',
+			'action': 'check-all',
 			'whatever': 1234
 		};
 

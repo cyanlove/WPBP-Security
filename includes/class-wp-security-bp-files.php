@@ -97,15 +97,6 @@ class WP_Security_BP_Files {
 	protected $parent_root;
 
 	/**
-	 * Short desc
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      array    $json    The array that will be passed as a JSON file to the admin
-	 */
-	protected $json;
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -118,15 +109,8 @@ class WP_Security_BP_Files {
 		$this->request_uri = $request_uri;
 		$this->nonce_action_name = 'wp-security-bp-file-access';
 		$this->wp_config = 'wp-config.php';
-		$this->json = array(
-			'status'   		=> 'fail',
-			'short_desc'	=> '',	
-			'message'  		=> '',
-			'button'   		=> false,
-			'uri'      		=> '',
-		);
 
-		$access_type = get_filesystem_method();
+		$access_type = function_exists( 'get_filesystem_method' ) ? get_filesystem_method() : '';
 		if ( $access_type === 'direct' ) {
 
 			// request credentials
@@ -200,12 +184,37 @@ class WP_Security_BP_Files {
 	 */
 	private function find_wp_config() {
 
-		if ( $this->wp_filesystem->exists( $this->root . $this->wp_config ) ) {
-			return true;
+		return $this->wp_filesystem->exists( $this->root . $this->wp_config );
+
+	}
+
+	/**
+	 * This will be deprecated
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function check_wp_config() {
+
+		$is_in_root = $this->find_wp_config();
+		
+		if ( $is_in_root ) {
+			$response['status'] = 'fail';
+			$response['short_desc'] = 'Check wp-config.php location';
+			$response['message'] = __( 'The file wp-config.php is in default location, it is recommended to store this file on the parent directory', $this->plugin_name );
+			$response['button'] = true;
+			$response['action'] = 'files-fix-wp-config';
 		}
 		else {
-			return false;
+			$response['status'] = 'passed';
+			$response['short_desc'] = 'Check wp-config.php location';
+			$response['message'] = __( 'Good job, wp-config.php not on default location!!!', $this->plugin_name );
+			$response['button'] = false;
+			$response['action'] = '';
 		}
+		return $response;
 
 	}
 
@@ -217,51 +226,13 @@ class WP_Security_BP_Files {
 	 * @since    1.0.0
 	 * @access   public
 	 */
-	public function check_wp_config() {
+	public function fix_wp_config() {
 
-		$is_in_root = $this->find_wp_config();
-		
-		$this->json['short_desc'] = __( 'Check Wp-config.php' , $this->plugin_name );
-		
-		if ( $is_in_root ) {
-			$this->json['message'] = __( 'Very bad guy', $this->plugin_name );
-			$this->json['button'] = true;
-			$this->json['uri'] = 'url-to-fix';
-		}
-		else {
-			$this->json['status'] = 'passed';
-			$this->json['message'] = __( 'Good job!!!', $this->plugin_name );
-		}
-
-		return $this->json;
-
-	}
-
-	/**
-	 * Short desc
-	 *
-	 * Long desc
-	 *
-	 * @since    1.0.0
-	 * @access   private
-	 */
-	private function move_wp_config() {
-
-		/*
-		//$file = 'wp-config.php';
-		$file = 'test-file.txt';
-
-		$root = $wp_filesystem->abspath();
-		$defaul_path = $wp_filesystem->wp_content_dir();
-		if ( $wp_filesystem->exists( $root . $file ) ) {
-			$parent_root = trailingslashit( dirname( $root ) );
-			$wp_filesystem->move(
-				$root . $file,
-				$parent_root . $file,
-				true // Overwrites if exists
-			);
-		}
-		*/
+		$this->wp_filesystem->move(
+			$this->root . $this->wp_config,
+			$this->parent_root . $this->wp_config,
+			false // Don't overwrites if exists
+		);
 
 	}
 
