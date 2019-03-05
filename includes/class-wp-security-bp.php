@@ -186,23 +186,10 @@ class WP_Security_BP {
 		 * 
 		 */
 		if ( wp_doing_ajax() ) {
-			
+
 			$action = empty( $_POST['action'] ) ? '' : $_POST['action'];
-
-			/**
-			 * This array matches the 'action' value sent with the ajax request with the
-			 * corresponding method of the WP_Security_BP_Admin class that should be fired.
-			 */
-			$actions = array(
-				'example_action' => 'example_admin_method',
-				'wp-security-bp' => 'final_json',
-				'fix_wp_config' => 'fix_wp_config',
-			);
-
-			if ( array_key_exists( $action, $actions ) ) {
-				$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, $actions[$action] );
-			}
-
+			$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, 'run_ajax_calls' );
+			
 		}
 
 	}

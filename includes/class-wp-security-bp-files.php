@@ -97,15 +97,6 @@ class WP_Security_BP_Files {
 	protected $parent_root;
 
 	/**
-	 * This will be deprecated
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      array    $json    The array that will be passed as a JSON file to the admin
-	 */
-	//protected $json;
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -118,13 +109,6 @@ class WP_Security_BP_Files {
 		$this->request_uri = $request_uri;
 		$this->nonce_action_name = 'wp-security-bp-file-access';
 		$this->wp_config = 'wp-config.php';
-		/* $this->json = array(
-			'status'   		=> 'fail',
-			'short_desc'	=> '',	
-			'message'  		=> '',
-			'button'   		=> false,
-			'uri'      		=> '',
-		); */
 
 		$access_type = function_exists( 'get_filesystem_method' ) ? get_filesystem_method() : '';
 		if ( $access_type === 'direct' ) {
@@ -221,14 +205,14 @@ class WP_Security_BP_Files {
 			$response['short_desc'] = 'Check wp-config.php location';
 			$response['message'] = __( 'The file wp-config.php is in default location, it is recommended to store this file on the parent directory', $this->plugin_name );
 			$response['button'] = true;
-			$response['uri'] = 'fix_wp_config';
+			$response['action'] = 'files-fix-wp-config';
 		}
 		else {
 			$response['status'] = 'passed';
 			$response['short_desc'] = 'Check wp-config.php location';
 			$response['message'] = __( 'Good job, wp-config.php not on default location!!!', $this->plugin_name );
 			$response['button'] = false;
-			$response['uri'] = '';
+			$response['action'] = '';
 		}
 		return $response;
 
@@ -242,12 +226,14 @@ class WP_Security_BP_Files {
 	 * @since    1.0.0
 	 * @access   public
 	 */
-	public function move_wp_config() {
+	public function fix_wp_config() {
+
 		$this->wp_filesystem->move(
 			$this->root . $this->wp_config,
 			$this->parent_root . $this->wp_config,
 			false // Don't overwrites if exists
 		);
+
 	}
 
 }
