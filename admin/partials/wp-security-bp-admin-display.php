@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Provide a admin area view for the plugin
  *
@@ -11,12 +10,10 @@
  * @package    wp_security_bp
  * @subpackage wp_security_bp/admin/partials
  */
-?>
 
-<!-- This file should primarily consist of HTML with a little bit of PHP. -->
+?>
 <h1>WordPress Security Best Practices</h1>
 <div id="app">
-	
 </div>
 
 

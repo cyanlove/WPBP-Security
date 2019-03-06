@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The file that defines the core plugin class
  *
@@ -114,7 +113,7 @@ class WP_Security_BP {
 		 * The class responsible for reading and writing files.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-json.php';
-		
+
 		/**
 		 * The class responsible for reading and writing files.
 		 */
@@ -176,25 +175,24 @@ class WP_Security_BP {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		// Add menu item
+		// Add menu item.
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
 
-		// Add Settings link to the plugin
+		// Add Settings link to the plugin.
 		$plugin_basename = plugin_basename( plugin_dir_path( __DIR__ ) . $this->plugin_name . '.php' );
 		$this->loader->add_filter( 'plugin_action_links_' . $plugin_basename, $plugin_admin, 'add_action_links' );
 
 		/**
 		 * Register Ajax calls.
-		 * 
 		 * For every Ajax request get the 'action' value sent through POST and register
 		 * the appropiate hook and method.
-		 * 
+		 *
 		 */
 		if ( wp_doing_ajax() ) {
 
-			$action = empty( $_POST['action'] ) ? '' : $_POST['action'];
+			$action = empty( $_POST['action'] ) ? '' : wp_unslash( $_POST['action'] );
 			$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, 'run_ajax_calls' );
-			
+
 		}
 
 	}

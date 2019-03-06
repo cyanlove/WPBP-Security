@@ -1,7 +1,4 @@
-
-
 <?php
-
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -43,7 +40,7 @@ class WP_Security_BP_Admin {
 	private $version;
 
 	/**
-	 * The 
+	 * The url of the plugin
 	 *
 	 * @since    1.0.0
 	 * @access   private
@@ -64,8 +61,8 @@ class WP_Security_BP_Admin {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of this plugin.
-	 * @param      string    $version    The version of this plugin.
+	 * @param    string $plugin_name       The name of this plugin.
+	 * @param    string $version           The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
 
@@ -79,7 +76,7 @@ class WP_Security_BP_Admin {
 	 * Register the stylesheets for the admin area.
 	 *
 	 * @since    1.0.0
-	 * @param    string    $hook_suffix    The page where it is supposed to be loaded.
+	 * @param    string $hook_suffix    The page where it is supposed to be loaded.
 	 */
 	public function enqueue_styles( $hook_suffix ) {
 
@@ -104,6 +101,7 @@ class WP_Security_BP_Admin {
 	 * Register the JavaScript for the admin area.
 	 *
 	 * @since    1.0.0
+	 * @param    string $hook_suffix    The page where it is supposed to be loaded.
 	 */
 	public function enqueue_scripts( $hook_suffix ) {
 
@@ -132,9 +130,7 @@ class WP_Security_BP_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-
 	public function add_plugin_admin_menu() {
-
 		/*
 		* Add a settings page for this plugin to the Settings menu.
 		*
@@ -143,7 +139,7 @@ class WP_Security_BP_Admin {
 		* Administration Menus: http://codex.wordpress.org/Administration_Menus
 		*
 		*/
-		$this->hook_suffix = add_options_page( 
+		$this->hook_suffix = add_options_page(
 			'WordPress Security Best Practices Dashboard',
 			'WP Security BP',
 			'manage_options',
@@ -156,12 +152,12 @@ class WP_Security_BP_Admin {
 	 * Add settings action link to the plugins page.
 	 *
 	 * @since    1.0.0
+	 * @param    array $links    The array containing the links.
 	 */
-
 	public function add_action_links( $links ) {
 		/*
-		*  Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
-		*/
+		 * Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
+		 */
 		$settings_link = array(
 			'<a href="' . $this->admin_url . '">' . sprintf( __( 'Settings', '%s' ), $this->plugin_name ) . '</a>',
 		);
@@ -174,17 +170,16 @@ class WP_Security_BP_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function check_all(){
-		//Class Files calls:
-		$files = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
+	public function check_all() {
+		// Class Files calls.
+		$files      = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
 		$response[] = $files->check_wp_config();
-		//Class Users calls:
-		$users = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
+		// Class Users calls.
+		$users      = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
 		$response[] = $users->check_users_ids();
-		//Class Database checks:
+		// Class Database checks.
 		$db = new WP_Security_BP_Database( $this->plugin_name );
-		$response[] = $db->check_name();
-
+		// $response[] = $db->check_name();
 		wp_send_json( $response );
 	}
 
@@ -196,7 +191,7 @@ class WP_Security_BP_Admin {
 	public function run_ajax_calls() {
 		if ( wp_doing_ajax() ) {
 
-			$action = empty( $_POST['action'] ) ? '' : $_POST['action'];
+			$action = empty( $_POST['action'] ) ? '' : wp_unslash( $_POST['action'] );
 
 			if ( 'check-all' === $action ) {
 				$this->check_all();
@@ -212,12 +207,12 @@ class WP_Security_BP_Admin {
 			 * The value is the method name and must be exact excluding the brackets '()'.
 			 */
 			$actions = array(
-				'class-example-action' => 'example_class_method', // for example purpose only
-				'files-fix-wp-config' => 'fix_wp_config',
+				'class-example-action' => 'example_class_method', // for example purpose only.
+				'files-fix-wp-config'  => 'fix_wp_config',
 			);
 			if ( array_key_exists( $action, $actions ) ) {
-				$key = strstr( $action, '-', true );
-				$method = $actions[$action];
+				$key    = strstr( $action, '-', true );
+				$method = $actions[ $action ];
 				switch ( $key ) {
 					case 'files':
 						$class = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
@@ -244,10 +239,8 @@ class WP_Security_BP_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-
 	public function display_plugin_setup_page() {
 		include_once 'partials/wp-security-bp-admin-display.php';
 	}
 
 }
-                   

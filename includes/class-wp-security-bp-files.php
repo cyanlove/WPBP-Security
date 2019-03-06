@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The file that defines the Files class
  *
@@ -100,61 +99,54 @@ class WP_Security_BP_Files {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param    string    $plugin_name       The name of this plugin.
-	 * @param    string    $request_uri       The URI from the request is made.
+	 * @param    string $plugin_name       The name of this plugin.
+	 * @param    string $request_uri       The URI from the request is made.
 	 */
 	public function __construct( $plugin_name, $request_uri ) {
 
-		$this->plugin_name = $plugin_name;
-		$this->request_uri = $request_uri;
+		$this->plugin_name       = $plugin_name;
+		$this->request_uri       = $request_uri;
 		$this->nonce_action_name = 'wp-security-bp-file-access';
-		$this->wp_config = 'wp-config.php';
+		$this->wp_config         = 'wp-config.php';
 
 		$access_type = function_exists( 'get_filesystem_method' ) ? get_filesystem_method() : '';
-		if ( $access_type === 'direct' ) {
+		if ( 'direct' === $access_type ) {
 
-			// request credentials
+			// request credentials.
 			$creds = $this->request_credentials();
 
-			// if user has no permission is asked for ftp credentials
+			// if user has no permission is asked for ftp credentials.
 			if ( false === $creds ) {
-				return; // stop processing here
+				return; // stop processing here.
 			}
 
-			// if ftp credentials are not ok user is asked again for ftp credentials
+			// if ftp credentials are not ok user is asked again for ftp credentials.
 			if ( false === WP_Filesystem( $creds ) ) {
 				$this->request_credentials( true );
-				return; // stop processing here
+				return; // stop processing here.
 			}
 
-			// call global $wp_filesystem variable
+			// call global $wp_filesystem variable.
 			global $wp_filesystem;
 			$this->wp_filesystem = $wp_filesystem;
 
-			// define root dir
+			// define root dir.
 			$this->root = $wp_filesystem->abspath();
-			// define parent root dir
+			// define parent root dir.
 			$this->parent_root = trailingslashit( dirname( $this->root ) );
 
-			// get the plugin directory path
+			// get the plugin directory path.
 			$plugin_path = trailingslashit( $this->wp_filesystem->wp_plugins_dir() . $this->plugin_name );
 
-			// make a directory
-			//$this->wp_filesystem->mkdir( $plugin_path . 'test-folder' );
+			// make a directory.
+			// $this->wp_filesystem->mkdir( $plugin_path . 'test-folder' ); // phpcs:ignore
+			// make a file and write content.
+			// $this->wp_filesystem->put_contents( $plugin_path . 'test-folder/test-file.txt', 'Example contents of a file', FS_CHMOD_FILE // predefined mode settings for WP files ); // phpcs:ignore
 
-			// make a file and write content
-			/* $this->wp_filesystem->put_contents(
-				$plugin_path . 'test-folder/test-file.txt',
-				'Example contents of a file',
-				FS_CHMOD_FILE // predefined mode settings for WP files
-			); */
-		
-		}	
-		else {
+		} else {
 			/* don't have direct write access. Prompt user with our notice */
 			echo "You don't have direct write access :(";
 		}
-
 
 	}
 
@@ -164,7 +156,7 @@ class WP_Security_BP_Files {
 	 * Long desc
 	 *
 	 * @since    1.0.0
-	 * @param    bool    $error       Optional. Defines if an error message should be displayed to the user or not.
+	 * @param    bool $error       Optional. Defines if an error message should be displayed to the user or not.
 	 * @access   private
 	 */
 	private function request_credentials( $error = false ) {
@@ -199,20 +191,19 @@ class WP_Security_BP_Files {
 	public function check_wp_config() {
 
 		$is_in_root = $this->find_wp_config();
-		
+
 		if ( $is_in_root ) {
-			$response['status'] = 'fail';
+			$response['status']     = 'fail';
 			$response['short_desc'] = 'Check wp-config.php location';
-			$response['message'] = __( 'The file wp-config.php is in default location, it is recommended to store this file on the parent directory', $this->plugin_name );
-			$response['button'] = true;
-			$response['action'] = 'files-fix-wp-config';
-		}
-		else {
-			$response['status'] = 'passed';
+			$response['message']    = __( 'The file wp-config.php is in default location, it is recommended to store this file on the parent directory', $this->plugin_name );
+			$response['button']     = true;
+			$response['action']     = 'files-fix-wp-config';
+		} else {
+			$response['status']     = 'passed';
 			$response['short_desc'] = 'Check wp-config.php location';
-			$response['message'] = __( 'Good job, wp-config.php not on default location!!!', $this->plugin_name );
-			$response['button'] = false;
-			$response['action'] = '';
+			$response['message']    = __( 'Good job, wp-config.php not on default location!!!', $this->plugin_name );
+			$response['button']     = false;
+			$response['action']     = '';
 		}
 		return $response;
 
@@ -231,7 +222,7 @@ class WP_Security_BP_Files {
 		$this->wp_filesystem->move(
 			$this->root . $this->wp_config,
 			$this->parent_root . $this->wp_config,
-			false // Don't overwrites if exists
+			false // Don't overwrites if exists.
 		);
 
 	}
