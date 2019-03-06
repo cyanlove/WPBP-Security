@@ -113,6 +113,11 @@ class WP_Security_BP {
 		/**
 		 * The class responsible for reading and writing files.
 		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-json.php';
+		
+		/**
+		 * The class responsible for reading and writing files.
+		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-files.php';
 
 		/**

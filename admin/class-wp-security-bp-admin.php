@@ -1,4 +1,5 @@
 
+
 <?php
 
 /**
@@ -60,15 +61,6 @@ class WP_Security_BP_Admin {
 	private $hook_suffix;
 
 	/**
-	 * The response to the Ajax requests
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      array    $json    The array that will be passed as a JSON file.
-	 */
-	private $json;
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -78,15 +70,8 @@ class WP_Security_BP_Admin {
 	public function __construct( $plugin_name, $version ) {
 
 		$this->plugin_name = $plugin_name;
-		$this->version = $version;
-		$this->admin_url = admin_url( 'options-general.php?page=' . $this->plugin_name );
-		/* $this->json = array(
-			'status'   		=> 'fail',
-			'short_desc'	=> '',	
-			'message'  		=> '',
-			'button'   		=> false,
-			'uri'      		=> '',
-		); */
+		$this->version     = $version;
+		$this->admin_url   = admin_url( 'options-general.php?page=' . $this->plugin_name );
 
 	}
 
@@ -177,10 +162,10 @@ class WP_Security_BP_Admin {
 		/*
 		*  Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
 		*/
-	$settings_link = array(
-		'<a href="' . $this->admin_url . '">' . __( 'Settings', $this->plugin_name ) . '</a>',
-	);
-	return array_merge( $settings_link, $links );
+		$settings_link = array(
+			'<a href="' . $this->admin_url . '">' . sprintf( __( 'Settings', '%s' ), $this->plugin_name ) . '</a>',
+		);
+		return array_merge( $settings_link, $links );
 
 	}
 
@@ -190,21 +175,17 @@ class WP_Security_BP_Admin {
 	 * @since    1.0.0
 	 */
 	public function check_all(){
-
 		//Class Files calls:
 		$files = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
 		$response[] = $files->check_wp_config();
-
 		//Class Users calls:
 		$users = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
 		$response[] = $users->check_users_ids();
-
-    	//Class Database checks:
+		//Class Database checks:
 		$db = new WP_Security_BP_Database( $this->plugin_name );
 		$response[] = $db->check_name();
-		
-		wp_send_json( $response );
 
+		wp_send_json( $response );
 	}
 
 	/**
@@ -213,34 +194,30 @@ class WP_Security_BP_Admin {
 	 * @since    1.0.0
 	 */
 	public function run_ajax_calls() {
-
 		if ( wp_doing_ajax() ) {
-			
+
 			$action = empty( $_POST['action'] ) ? '' : $_POST['action'];
-			
-			if ( $action === 'check-all' ) {
+
+			if ( 'check-all' === $action ) {
 				$this->check_all();
 			}
-			
+
 			/**
 			 * This array matches the 'action' value sent with the ajax request with the
 			 * corresponding method that should be fired.
-			 * 
-			 * The key is the action passed from JS. All action names must include the exact 
+			 *
+			 * The key is the action passed from JS. All action names must include the exact
 			 * name of the class that should be fired followed by a hyphen '-' and some identitiy name.
-			 * 
+			 *
 			 * The value is the method name and must be exact excluding the brackets '()'.
 			 */
 			$actions = array(
 				'class-example-action' => 'example_class_method', // for example purpose only
 				'files-fix-wp-config' => 'fix_wp_config',
 			);
-
 			if ( array_key_exists( $action, $actions ) ) {
-
 				$key = strstr( $action, '-', true );
 				$method = $actions[$action];
-
 				switch ( $key ) {
 					case 'files':
 						$class = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
@@ -254,16 +231,14 @@ class WP_Security_BP_Admin {
 					default:
 						wp_die();
 				}
-				
+
 				$class->$method();
 				$this->check_all();
-				
+
 			}
-
 		}
-		
-	}
 
+	}
 	/**
 	 * Render the settings page for this plugin.
 	 *
@@ -271,7 +246,8 @@ class WP_Security_BP_Admin {
 	 */
 
 	public function display_plugin_setup_page() {
-		include_once( 'partials/wp-security-bp-admin-display.php' );
+		include_once 'partials/wp-security-bp-admin-display.php';
 	}
 
 }
+                   
