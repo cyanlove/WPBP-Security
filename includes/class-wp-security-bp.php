@@ -113,6 +113,10 @@ class WP_Security_BP {
 		/**
 		 * The class responsible for reading and writing files.
 		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-json.php';
+		/**
+		 * The class responsible for reading and writing files.
+		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-files.php';
 
 		/**
@@ -180,28 +184,15 @@ class WP_Security_BP {
 
 		/**
 		 * Register Ajax calls.
-		 * 
+		 *
 		 * For every Ajax request get the 'action' value sent through POST and register
 		 * the appropiate hook and method.
-		 * 
+		 *
 		 */
 		if ( wp_doing_ajax() ) {
-			
+
 			$action = empty( $_POST['action'] ) ? '' : $_POST['action'];
-
-			/**
-			 * This array matches the 'action' value sent with the ajax request with the
-			 * corresponding method of the WP_Security_BP_Admin class that should be fired.
-			 */
-			$actions = array(
-				'example_action' => 'example_admin_method',
-				'wp-security-bp' => 'final_json',
-			);
-
-			if ( array_key_exists( $action, $actions ) ) {
-				$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, $actions[$action] );
-			}
-
+			$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, 'run_ajax_calls' );
 		}
 
 	}

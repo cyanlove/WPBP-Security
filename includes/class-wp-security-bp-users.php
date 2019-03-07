@@ -49,15 +49,26 @@ class WP_Security_BP_Users {
 	 * @var      integer    $range_scan_id  The integer to set the range to scan of users id's.
 	 */
 	protected $range_scan_id;
-
 	/**
 	 * Short desc
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      array    $json    The array that will be passed as a JSON file to the admin
+	 * @var      integer    $range_scan_id  The integer to set the range to scan of users id's.
 	 */
-	protected $json;
+	private $admin_names_blacklist = array(
+		'username',
+		'user1',
+		'admin',
+		'Admin',
+		'administrator',
+		'Administrator',
+		'db2admin',
+		'demo',
+		'alex',
+		'sql',
+		'pos',
+	);
 
 	/**
 	 * Initialize the class and set its properties.
@@ -65,36 +76,58 @@ class WP_Security_BP_Users {
 	 * @since    1.0.0
 	 * @param    string    $plugin_name       The name of this plugin.
 	 */
-	public function __construct( $plugin_name) {
+	public function __construct( $plugin_name ) {
 
-		$this->plugin_name = $plugin_name;
+		$this->plugin_name   = $plugin_name;
 		$this->range_scan_id = 5;
-		$this->users = get_users();
-		$this->json = array(
-			'status'   		=> 'fail',
-			'short_desc'	=> '',	
-			'message'  		=> '',
-			'button'   		=> false,
-			'uri'      		=> '',
-		);
+		$this->users         = get_users();
 	}
 
-	public function check_users_ids(){
+	public function check_users_ids() {
 
-		$this->json['short_desc'] = __( 'Check admin id' , $this->plugin_name );
+		$response['short_desc'] = __( 'Check admin id', $this->plugin_name );
 
-		foreach ( $this->users as $user ){
-			if ( $user->ID <= $this->range_scan_id){
-				$this->json['message'] = __( 'Danger IDS!!!', $this->plugin_name );
-				$this->json['button'] = true;
-				$this->json['uri'] = 'url-to-fix';
-			}
-			else {
-			$this->json['status'] = 'passed';
-			$this->json['message'] = __( 'All under control!', $this->plugin_name );
+		foreach ( $this->users as $user ) {
+			if ( $user->ID <= $this->range_scan_id ) {
+				$response['status']  = 'fail';
+				$response['message'] = __( 'Danger IDS!!!', $this->plugin_name );
+				$response['button']  = true;
+				$response['uri']     = 'url-to-fix';
+
+			} else {
+				$response['status']  = 'passed';
+				$response['message'] = __( 'All under control!', $this->plugin_name );
+				$response['button']  = false;
+				$response['uri']     = 'url-to-fix';
 			}
 		}
-		
-		return $this->json;
+		return $response;
+	}
+
+	public function check_admin_name() {
+
+		$response['short_desc'] = __( 'Check admin user login', $this->plugin_name );
+		$check                  = false;
+
+		foreach ( $this->users as $user ) {
+			if ( $user->caps['administrator'] && in_array( $user->user_login, $this->$admin_names_blacklist, true ) ) {
+					$check = true;
+			}
+		}
+
+		if ( ! $check ) {
+			$response['status']  = 'fail';
+			$response['message'] = __( 'Admin user login is not secure.', $this->plugin_name );
+			$response['button']  = true;
+			$response['uri']     = 'url-to-fix';
+			$response['action']  = '';
+		} else {
+			$response['status']  = 'passed';
+			$response['message'] = __( 'Admin users login are OK!', $this->plugin_name );
+			$response['button']  = false;
+			$response['uri']     = 'url-to-fix';
+			$response['action']  = '';
+		}
+			return $response;
 	}
 }

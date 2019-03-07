@@ -5,7 +5,7 @@ new Vue({
 			<div id="container" v-for="item in info">
 				<div v-bind:class="[ item.status === 'fail' ? 'failed' : 'passed' ]"  class="accordion" @click="togAccordeon">
 					{{ item.short_desc }} 
-					<button id="fix" v-show="item.status === 'fail'" @click="fix(item.uri)">
+					<button id="fix" v-show="item.status === 'fail'" @click="fix(item.action)">
 						FIX
 					</button>
 				</div>
@@ -28,7 +28,7 @@ new Vue({
 	methods:{
 		getInfo(){
 			var params = new URLSearchParams();
-			params.append('action', 'wp-security-bp');
+			params.append('action', 'check-all');
 
 			axios.post(ajaxurl, params)
 			.then( response => {
@@ -40,7 +40,17 @@ new Vue({
 			});
 		},
 		fix(e){
-			alert(e)
+			var params = new URLSearchParams();
+			params.append('action', e);
+
+			axios.post(ajaxurl, params)
+			.then( response => {
+				this.info = response.data;
+				console.log(this.info)
+			})
+			.catch( error => {
+				console.log(error);
+			});
 		},
 		togAccordeon(event){
 			var panel = event.target.nextElementSibling;
