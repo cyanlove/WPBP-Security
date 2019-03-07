@@ -65,11 +65,10 @@ class WP_Security_BP_Admin {
 	 * @param      string    $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
-
+    
 			$this->plugin_name = $plugin_name;
 			$this->version     = $version;
 			$this->admin_url   = admin_url( 'options-general.php?page=' . $this->plugin_name );
-
 	}
 
 	/**
@@ -171,6 +170,7 @@ class WP_Security_BP_Admin {
 	 *
 	 * @since    1.0.0
 	 */
+
 	public function check_all() {
 			//Class Files checks:
 			$files      = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
@@ -184,6 +184,21 @@ class WP_Security_BP_Admin {
 			$response[] = $db->check_name();
 
 			wp_send_json( $response );
+  }
+
+	public function check_all(){
+		//Class Files calls:
+		$files      = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
+		$response[] = $files->check_wp_config();
+		//Class Users calls:
+		$users      = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
+		$response[] = $users->check_users_ids();
+		//Class Database checks:
+		$db         = new WP_Security_BP_Database( $this->plugin_name );
+		$response[] = $db->check_name();
+
+		wp_send_json( $response );
+
 	}
 
 	/**
@@ -193,9 +208,15 @@ class WP_Security_BP_Admin {
 	 */
 	public function run_ajax_calls() {
 
+
 		if ( wp_doing_ajax() ) {
 
 			$action = empty( $_POST['action'] ) ? '' : wp_verify_nonce( sanitize_key( $_POST['action'] ) );
+
+		if ( wp_doing_ajax() ) {
+
+			$action = empty( $_POST['action'] ) ? '' : $_POST['action'];
+
 
 			if ( 'check-all' === $action ) {
 				$this->check_all();
@@ -212,11 +233,19 @@ class WP_Security_BP_Admin {
 			 */
 			$actions = array(
 				'class-example-action' => 'example_class_method', // for example purpose only
+
 				'files-fix-wp-config'  => 'fix_wp_config',
 			);
 			if ( array_key_exists( $action, $actions ) ) {
 				$key    = strstr( $action, '-', true );
 				$method = $actions[ $action ];
+
+				'files-fix-wp-config' => 'fix_wp_config',
+			);
+			if ( array_key_exists( $action, $actions ) ) {
+				$key = strstr( $action, '-', true );
+				$method = $actions[$action];
+
 				switch ( $key ) {
 					case 'files':
 						$class = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
@@ -248,3 +277,4 @@ class WP_Security_BP_Admin {
 	}
 
 }
+                   

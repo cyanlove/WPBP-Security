@@ -114,6 +114,7 @@ class WP_Security_BP {
 		 * The class responsible for reading and writing files.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-json.php';
+
 		/**
 		 * The class responsible for reading and writing files.
 		 */
@@ -193,6 +194,7 @@ class WP_Security_BP {
 
 			$action = empty( $_POST['action'] ) ? '' : $_POST['action'];
 			$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, 'run_ajax_calls' );
+      
 		}
 
 	}
