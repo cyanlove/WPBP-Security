@@ -179,7 +179,8 @@ class WP_Security_BP_Admin {
 		$response[] = $users->check_users_ids();
 		// Class Database checks.
 		$db = new WP_Security_BP_Database( $this->plugin_name );
-		// $response[] = $db->check_name();
+		$response[] = $db->check_name();
+
 		wp_send_json( $response );
 	}
 

@@ -56,7 +56,7 @@ class WP_Security_BP_JSON {
 			'message' => '',
 			'button'  => false,
 			'trigger' => '',
-			'class'   => '', //JACO, take this and move on!
+			'feature'   => '', //JACO, take this and move on!
 		);
 	}
 
@@ -79,10 +79,10 @@ class WP_Security_BP_JSON {
 		);
 	}
 
-	public function fail( $message, $fix ) {
+	public function fail( $message, $fix = null ) {
 		$this->json['button']  = true;
 		$this->json['trigger'] = $fix;
-		$this->json['status']  = 'failed';
+		$this->json['status']  = 'fail';
 		$this->json['message'] = sprintf(
 			/* translators: %s: message, plugin name */
 			__(
@@ -94,4 +94,3 @@ class WP_Security_BP_JSON {
 		);
 	}
 }
-

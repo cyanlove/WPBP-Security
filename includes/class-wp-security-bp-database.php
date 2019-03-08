@@ -129,16 +129,15 @@ class WP_Security_BP_Database {
 		and even part of string coincidences.
 		*/
 		$check = ! in_array( $this->db_name, $this->db_names_blacklist );
-
 		if ( $check ) {
 			$this->response->pass( 'Your database name ( ' . $this->db_name . ' ) is fine' );
 		} else {
-			$this->response->fail( 'Your database name ( ' . $this->db_name . ' ) is not secure enough' );
+			$this->response->fail( 'Your database name ( ' . $this->db_name . ' ) is not secure enough', 'fix database name' );
 		}
-
+		
 		return $this->response->json;
 	}
-
+	
 	public function check_user() {}
 
 	public function check_mysql_version() {}
