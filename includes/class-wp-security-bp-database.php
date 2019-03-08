@@ -121,6 +121,8 @@ class WP_Security_BP_Database {
 	}
 
 	public function check_name() {
+
+		$short_desc = 'check DB name';
 		//push domain to $db_names_blacklist (coming soon)
 
 		/*
@@ -129,15 +131,19 @@ class WP_Security_BP_Database {
 		and even part of string coincidences.
 		*/
 		$check = ! in_array( $this->db_name, $this->db_names_blacklist );
+
 		if ( $check ) {
-			$this->response->pass( 'Your database name ( ' . $this->db_name . ' ) is fine' );
+			$message = 'Your database name ( ' . $this->db_name . ' ) is fine';
+			$this->response->pass( $short_desc, $message );
 		} else {
-			$this->response->fail( 'Your database name ( ' . $this->db_name . ' ) is not secure enough', 'fix database name' );
+			$message = 'Your database name ( ' . $this->db_name . ' ) is not secure enough';
+			$trigger = 'fix DB name';
+			$this->response->fail( $short_desc, $message, $trigger );
 		}
-		
+
 		return $this->response->json;
 	}
-	
+
 	public function check_user() {}
 
 	public function check_mysql_version() {}
