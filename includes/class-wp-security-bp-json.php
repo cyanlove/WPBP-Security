@@ -13,7 +13,7 @@
  */
 
 /**
- * The JSON class.
+ * The JSON class. 
  *
  * This class handles all the information to be send by ajax response in an array.
  *
