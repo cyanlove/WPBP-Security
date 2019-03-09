@@ -22,6 +22,7 @@
  * @subpackage wp_security_bp/includes
  * @author     Cyan Lovers <hello@cyanlove.com>
  */
+
 class WP_Security_BP_Users {
 	/**
 	 * The unique identifier of this plugin.
@@ -55,9 +56,22 @@ class WP_Security_BP_Users {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      array    $json    The array that will be passed as a JSON file to the admin
+	 * @var      array    $blacklists_admin_names  The array with blacklist admin login names.
 	 */
-	protected $json;
+
+	private $blacklists_admin_names = array(
+		'username',
+		'user1',
+		'admin',
+		'Admin',
+		'administrator',
+		'Administrator',
+		'db2admin',
+		'demo',
+		'alex',
+		'sql',
+		'pos',
+	);
 
 	/**
 	 * Initialize the class and set its properties.
@@ -65,36 +79,70 @@ class WP_Security_BP_Users {
 	 * @since    1.0.0
 	 * @param    string    $plugin_name       The name of this plugin.
 	 */
-	public function __construct( $plugin_name) {
 
-		$this->plugin_name = $plugin_name;
-		$this->range_scan_id = 5;
-		$this->users = get_users();
-		$this->json = array(
-			'status'   		=> 'fail',
-			'short_desc'	=> '',	
-			'message'  		=> '',
-			'button'   		=> false,
-			'uri'      		=> '',
-		);
+	/**
+	 * The final attribute to return in each public function.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $response    The array that will be passed as a JSON file to the admin.
+	 */
+	protected $response;
+
+	public function __construct( $plugin_name ) {
+
+		$this->plugin_name   = $plugin_name;
+		$this->range_scan_id = 10;
+		$this->users         = get_users();
+		$this->response      = new WP_Security_BP_JSON( $this->plugin_name );
+
 	}
 
-	public function check_users_ids(){
+	public function check_users_ids() {
 
-		$this->json['short_desc'] = __( 'Check admin id' , $this->plugin_name );
+		$short_desc = 'Check admin id';
+		$check      = false;
 
-		foreach ( $this->users as $user ){
-			if ( $user->ID <= $this->range_scan_id){
-				$this->json['message'] = __( 'Danger IDS!!!', $this->plugin_name );
-				$this->json['button'] = true;
-				$this->json['uri'] = 'url-to-fix';
-			}
-			else {
-			$this->json['status'] = 'passed';
-			$this->json['message'] = __( 'All under control!', $this->plugin_name );
+		foreach ( $this->users as $user ) {
+			if ( $user->ID <= $this->range_scan_id ) {
+				$check = true;
 			}
 		}
-		
-		return $this->json;
+		if ( true === $check ) {
+				$message = 'You have danger admin ids!';
+				$trigger = 'fix-admin-id';
+				$this->response->fail( $short_desc, $message, $trigger );
+		} else {
+				$message = 'Your admin ids are secure!';
+				$this->response->pass( $short_desc, $message );
+		}
+
+		return $this->response->json;
 	}
+
+	public function check_admin_name() {
+
+		$short_desc = 'Check admin user login';
+		$check      = false;
+
+		foreach ( $this->users as $user ) {
+			if ( $user->caps['administrator'] && in_array( $user->user_login, $this->blacklists_admin_names, true ) ) {
+					$check = true;
+			}
+		}
+		if ( true === $check ) {
+				$message = 'You have danger admin user login!';
+				$trigger = 'fix-admin-login';
+				$this->response->fail( $short_desc, $message, $trigger );
+		} else {
+				$message = 'Your admin user login are secure!';
+				$this->response->pass( $short_desc, $message );
+		}
+
+		return $this->response->json;
+	}
+
 }
+
+
+
