@@ -58,7 +58,6 @@ class WP_Security_BP_Users {
 	 * @access   protected
 	 * @var      array    $blacklists_admin_names  The array with blacklist admin login names.
 	 */
-
 	private $blacklists_admin_names = array(
 		'username',
 		'user1',
@@ -89,7 +88,6 @@ class WP_Security_BP_Users {
 	 * @since    1.0.0
 	 * @param    string $plugin_name       The name of this plugin.
 	 */
-
 	public function __construct( $plugin_name ) {
 
 		$this->plugin_name   = $plugin_name;
@@ -111,7 +109,7 @@ class WP_Security_BP_Users {
 		}
 		if ( true === $check ) {
 				$message = 'You have danger admin ids!';
-				$action = 'fix-admin-id';
+				$action  = 'fix-admin-id';
 				$this->response->fail( $short_desc, $message, $action );
 		} else {
 				$message = 'Your admin ids are secure!';
@@ -133,7 +131,7 @@ class WP_Security_BP_Users {
 		}
 		if ( true === $check ) {
 				$message = 'You have danger admin user login!';
-				$action = 'fix-admin-login';
+				$action  = 'fix-admin-login';
 				$this->response->fail( $short_desc, $message, $action );
 		} else {
 				$message = 'Your admin user login are secure!';
