@@ -177,6 +177,7 @@ class WP_Security_BP_Admin {
 		// Class Users calls.
 		$users      = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
 		$response[] = $users->check_users_ids();
+		$response[] = $users->check_admin_name();
 		// Class Database checks.
 		$db = new WP_Security_BP_Database( $this->plugin_name );
 		$response[] = $db->check_name();
