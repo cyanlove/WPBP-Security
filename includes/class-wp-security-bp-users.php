@@ -81,7 +81,8 @@ class WP_Security_BP_Users {
 	 * @var      array    $response    The array that will be passed as a JSON file to the admin.
 	 */
 	protected $response;
-
+	
+	
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -110,8 +111,8 @@ class WP_Security_BP_Users {
 		}
 		if ( true === $check ) {
 				$message = 'You have danger admin ids!';
-				$trigger = 'fix-admin-id';
-				$this->response->fail( $short_desc, $message, $trigger );
+				$action = 'fix-admin-id';
+				$this->response->fail( $short_desc, $message, $action );
 		} else {
 				$message = 'Your admin ids are secure!';
 				$this->response->pass( $short_desc, $message );
@@ -132,8 +133,8 @@ class WP_Security_BP_Users {
 		}
 		if ( true === $check ) {
 				$message = 'You have danger admin user login!';
-				$trigger = 'fix-admin-login';
-				$this->response->fail( $short_desc, $message, $trigger );
+				$action = 'fix-admin-login';
+				$this->response->fail( $short_desc, $message, $action );
 		} else {
 				$message = 'Your admin user login are secure!';
 				$this->response->pass( $short_desc, $message );
