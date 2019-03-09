@@ -74,13 +74,6 @@ class WP_Security_BP_Users {
 	);
 
 	/**
-	 * Initialize the class and set its properties.
-	 *
-	 * @since    1.0.0
-	 * @param    string    $plugin_name       The name of this plugin.
-	 */
-
-	/**
 	 * The final attribute to return in each public function.
 	 *
 	 * @since    1.0.0
@@ -88,7 +81,14 @@ class WP_Security_BP_Users {
 	 * @var      array    $response    The array that will be passed as a JSON file to the admin.
 	 */
 	protected $response;
-
+	
+	/**
+	 * Initialize the class and set its properties.
+	 *
+	 * @since    1.0.0
+	 * @param    string    $plugin_name       The name of this plugin.
+	 */
+	
 	public function __construct( $plugin_name ) {
 
 		$this->plugin_name   = $plugin_name;
