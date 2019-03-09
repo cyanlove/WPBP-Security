@@ -48,6 +48,7 @@ class WP_Security_BP_JSON {
 	 * @since    1.0.0
 	 * @param    string    $plugin_name       The name of this plugin.
 	 */
+	
 	public function __construct( $plugin_name ) {
 
 		$this->plugin_name = $plugin_name;
@@ -77,7 +78,7 @@ class WP_Security_BP_JSON {
 	}
 
 	public function fail( $short_desc = '', $message, $action = null ) {
-	
+
 		$this->json['status']     = 'fail';
 		$this->json['short_desc'] = $short_desc;
 		$this->json['button']     = true;

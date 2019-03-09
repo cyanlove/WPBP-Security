@@ -120,7 +120,7 @@ class WP_Security_BP_Admin {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.js', array( 'jquery' ), $this->version, false );
 			wp_enqueue_script( $this->plugin_name . '-vue', 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js', array(), '2.5.17', true );
 			wp_enqueue_script( $this->plugin_name . '-axios', 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js', array(), '0.18.0', true );
-			wp_enqueue_script( $this->plugin_name . '-view', plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-view.js', array(), $this->version, true );
+			wp_enqueue_script( $this->plugin_name . '-view', plugin_dir_url( __FILE__ ) . '../dist/bundle.js', array(), $this->version, true );
 		}
 
 	}
