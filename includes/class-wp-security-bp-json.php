@@ -13,7 +13,7 @@
  */
 
 /**
- * The JSON class.
+ * The JSON class. 
  *
  * This class handles all the information to be send by ajax response in an array.
  *
@@ -82,13 +82,14 @@ class WP_Security_BP_JSON {
 		);
 	}
 
-	public function fail( $short_desc = '', $message, $trigger = null ) {
+	public function fail( $short_desc = '', $message, $action = null ) {
 
 		$this->json['button']     = true;
-		$this->json['trigger']    = $trigger;
+		$this->json['action']    = $action;
 		$this->json['short_desc'] = $short_desc;
 		$this->json['status']     = 'fail';
 		$this->json['message']    = sprintf(
+
 			/* translators: %s: message, plugin name */
 			__(
 				'%s',
