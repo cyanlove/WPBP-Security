@@ -52,10 +52,12 @@ class WP_Security_BP_JSON {
 
 		$this->plugin_name = $plugin_name;
 		$this->json        = array(
-			'status'  => 'passed',
-			'message' => '',
-			'button'  => false,
-			'action'  => '',
+			'status'     => 'passed',
+			'short_desc' => '',
+			'message'    => '',
+			'button'     => false,
+			'trigger'    => '',
+			'feature'    => '', //JACO, take this and move on!
 		);
 	}
 
@@ -65,9 +67,11 @@ class WP_Security_BP_JSON {
 	 * @since    1.0.0
 	 * @param    string    $message       The message of OK.
 	 */
-	public function pass( $message ) {
-		$this->json['button']  = false;
-		$this->json['message'] = sprintf(
+	public function pass( $short_desc = '', $message ) {
+
+		$this->json['short_desc'] = $short_desc;
+		$this->json['button']     = false;
+		$this->json['message']    = sprintf(
 			/* translators: %s: message, plugin name */
 			__(
 				'%s',
@@ -78,11 +82,14 @@ class WP_Security_BP_JSON {
 		);
 	}
 
-	public function fail( $message, $fix = '' ) {
-		$this->json['button']  = true;
-		$this->json['action']  = $fix;
-		$this->json['status']  = 'fail';
-		$this->json['message'] = sprintf(
+	public function fail( $short_desc = '', $message, $action = null ) {
+
+		$this->json['button']     = true;
+		$this->json['action']    = $action;
+		$this->json['short_desc'] = $short_desc;
+		$this->json['status']     = 'fail';
+		$this->json['message']    = sprintf(
+
 			/* translators: %s: message, plugin name */
 			__(
 				'%s',
