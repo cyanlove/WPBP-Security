@@ -77,7 +77,7 @@ class WP_Security_BP_JSON {
 	}
 
 	public function fail( $short_desc = '', $message, $action = null ) {
-	
+
 		$this->json['status']     = 'fail';
 		$this->json['short_desc'] = $short_desc;
 		$this->json['button']     = true;
