@@ -10,7 +10,6 @@
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "babel-loader": "^8.0.5",
-    "babel-preset-env": "^1.7.0",
     "vue": "^2.6.8",
     "vue-loader": "^15.7.0",
     "vue-template-compiler": "^2.6.8",
@@ -20,7 +19,6 @@
   "scripts": {
     "dev": "webpack --mode development",
     "production": "webpack --mode production",
-    "start": "webpack-dev-server --progress --colors",
     "watch": "npm run dev -- --watch"
   },
   "repository": {

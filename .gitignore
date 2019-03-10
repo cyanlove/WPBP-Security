@@ -39,3 +39,6 @@ intermediate
 cache
 health-check
 node_modules
+
+#
+package-lock.json

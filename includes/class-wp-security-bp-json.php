@@ -48,7 +48,6 @@ class WP_Security_BP_JSON {
 	 * @since    1.0.0
 	 * @param    string    $plugin_name       The name of this plugin.
 	 */
-	
 	public function __construct( $plugin_name ) {
 
 		$this->plugin_name = $plugin_name;

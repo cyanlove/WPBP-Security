@@ -3,10 +3,10 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './admin/js/wp-security-bp-view.js',
+  entry: './admin/src/js/wp-security-bp-view.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, 'admin/js'),
+    filename: 'wp-security-bp.min.js'
   },
   module:{
   		rules:[
@@ -14,7 +14,10 @@ module.exports = {
   				test:/\.js$/,
   				exclude: /node_modules/,
   				use: {
-  					loader: 'babel-loader'
+  					loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env']
+            }
   				}
   			},
   			{
