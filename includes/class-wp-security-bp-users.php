@@ -94,7 +94,7 @@ class WP_Security_BP_Users {
 		$this->plugin_name   = $plugin_name;
 		$this->range_scan_id = 10;
 		$this->users         = get_users();
-		$this->response      = new WP_Security_BP_JSON( $this->plugin_name );
+		$this->response      = new WP_Security_BP_JSON();
 
 	}
 
@@ -109,12 +109,12 @@ class WP_Security_BP_Users {
 			}
 		}
 		if ( true === $check ) {
-				$message = 'You have danger admin ids!';
-				$action  = 'fix-admin-id';
-				$this->response->fail( $short_desc, $message, $action );
+				$message = __( 'You have danger admin ids!', 'wp-security-bp' );
+				$action  = 'users-fix-admin-id';
+				$this->response->fail( $message, $short_desc, $action );
 		} else {
-				$message = 'Your admin ids are secure!';
-				$this->response->pass( $short_desc, $message );
+				$message = __( 'Your admin ids are secure!', 'wp-security-bp' );
+				$this->response->pass( $message, $short_desc );
 		}
 
 		return $this->response->json;
@@ -131,12 +131,12 @@ class WP_Security_BP_Users {
 			}
 		}
 		if ( true === $check ) {
-				$message = 'You have danger admin user login!';
-				$action  = 'fix-admin-login';
-				$this->response->fail( $short_desc, $message, $action );
+				$message = __( 'You have danger admin user login!', 'wp-security-bp' );
+				$action  = 'users-fix-admin-login';
+				$this->response->fail( $message, $short_desc, $action );
 		} else {
-				$message = 'Your admin user login are secure!';
-				$this->response->pass( $short_desc, $message );
+				$message = __( 'Your admin user login are secure!', 'wp-security-bp' );
+				$this->response->pass( $message, $short_desc );
 		}
 
 		return $this->response->json;

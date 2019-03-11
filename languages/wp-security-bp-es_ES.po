@@ -24,11 +24,11 @@ msgstr ""
 
 #. Description of the plugin
 msgid "Secure your WordPress installation by following the best practices."
-msgstr ""
+msgstr "Asegura tu instalación de WordPress siguiendo las mejores prácticas"
 
 #. Author of the plugin
 msgid "Cyan Lovers"
-msgstr ""
+msgstr "Amantes del Cyan"
 
 #. Author URI of the plugin
 msgid "https://cyanlove.com/"
@@ -37,35 +37,35 @@ msgstr ""
 #. translators: %s: Name of the database
 #: includes/class-wp-security-bp-database.php:138
 msgid "Your database name (%s) is fine."
-msgstr ""
+msgstr "El nombre de tu base de datos (%s) es correcto."
 
 #. translators: %s: Name of the database
 #: includes/class-wp-security-bp-database.php:145
 msgid "Your database name (%s) is not secure enough."
-msgstr ""
+msgstr "El nombre de tu base de datos (%s) no es suficientemente seguro."
 
 #. translators: %s: Name of the wp-config file
 #: includes/class-wp-security-bp-files.php:200
 msgid "The file %s is on default location, it is recommended to store this file on the parent directory"
-msgstr ""
+msgstr "El archivo %s está en su ubicación por defecto, se recomienda almacenar este archivo en el directorio superior"
 
 #. translators: %s: Name of the wp-config file
 #: includes/class-wp-security-bp-files.php:209
 msgid "Good job, %s is not on default location"
-msgstr ""
+msgstr "Buen trabajo, %s no está en su ubicación por defecto"
 
 #: includes/class-wp-security-bp-users.php:112
 msgid "You have danger admin ids!"
-msgstr ""
+msgstr "Tienes id de admin peligrosos!"
 
 #: includes/class-wp-security-bp-users.php:116
 msgid "Your admin ids are secure!"
-msgstr ""
+msgstr "Tus id de admin son seguros"
 
 #: includes/class-wp-security-bp-users.php:134
 msgid "You have danger admin user login!"
-msgstr ""
+msgstr "Tienes login de usuario de admin peligrosos!"
 
 #: includes/class-wp-security-bp-users.php:138
 msgid "Your admin user login are secure!"
-msgstr ""
+msgstr "Tus login de usuario de admin son seguros!"
