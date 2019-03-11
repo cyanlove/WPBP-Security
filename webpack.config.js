@@ -6,7 +6,7 @@ module.exports = {
   entry: './admin/src/js/wp-security-bp-view.js',
   output: {
     path: path.resolve(__dirname, 'admin/js'),
-    filename: 'wp-security-bp.min.js'
+    filename: 'wp-security-bp-admin.min.js'
   },
   module:{
   		rules:[

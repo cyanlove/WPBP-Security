@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 new Vue({
 	el: document.querySelector('#app'),
 	template: `
