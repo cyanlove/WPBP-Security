@@ -53,8 +53,8 @@ class WP_Security_BP_Database {
 	 * @var      array    $tables_prefix_blacklist    The array of all prohibited prefixes.
 	 */
 	private $tables_prefix_blacklist = array(
-		'wp',
 		'db',
+		'wp',
 		'wordpress',
 	);
 
@@ -133,20 +133,18 @@ class WP_Security_BP_Database {
 		$check = ! in_array( $this->db_name, $this->db_names_blacklist );
 
 		if ( $check ) {
-			$message = sprintf(
-				/* translators: %s: Name of the database */
-				__( 'Your database name (%s) is fine.', 'wp-security-bp' ),
-				$this->db_name
-			);
-			$this->response->pass( $message, $short_desc );
+			/* translators: %s: Name of the database */
+			$message = __( 'Your database name (%s) is fine.', 'wp-security-bp' );
+			$args    = array( $this->db_name );
+
+			$this->response->pass( $message, $args, $short_desc );
 		} else {
-			$message = sprintf(
-				/* translators: %s: Name of the database */
-				__( 'Your database name (%s) is not secure enough.', 'wp-security-bp' ),
-				$this->db_name
-			);
-			$action = 'database-fix-name';
-			$this->response->fail( $message, $short_desc, $action );
+			/* translators: %s: Name of the database */
+			$message = __( 'Your database name (%s) is not secure enough.', 'wp-security-bp' );
+			$args    = array( $this->db_name );
+			$action  = 'database-fix-name';
+
+			$this->response->fail( $message, $args, $short_desc, $action );
 		}
 
 		return $this->response->json;

@@ -47,7 +47,7 @@ class WP_Security_BP_JSON {
 	 * @param    string $message       The message of OK.
 	 * @param    string $short_desc    Optional. The description of the check.
 	 */
-	public function pass( $message, $short_desc = '' ) {
+	public function pass( $message, $args = [], $short_desc = '' ) {
 
 		$this->json['status']     = 'passed';
 		$this->json['short_desc'] = $short_desc;
@@ -63,12 +63,12 @@ class WP_Security_BP_JSON {
 	 * @param    string $short_desc    Optional. The description of the check.
 	 * @param    string $action        Optional. The action that fires the button.
 	 */
-	public function fail( $message, $short_desc = '', $action = null ) {
+	public function fail( $message, $args = [], $short_desc = '', $action = null ) {
 
 		$this->json['status']     = 'fail';
 		$this->json['short_desc'] = $short_desc;
 		$this->json['button']     = true;
 		$this->json['action']     = $action;
-		$this->json['message']    = $message;
+		$this->json['message']    = vsprintf( $message, $args );
 	}
 }
