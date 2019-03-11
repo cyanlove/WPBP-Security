@@ -34,25 +34,23 @@ msgstr "Amantes del Cyan"
 msgid "https://cyanlove.com/"
 msgstr ""
 
-#. translators: %s: Name of the database
-#: includes/class-wp-security-bp-database.php:138
-msgid "Your database name (%s) is fine."
-msgstr "El nombre de tu base de datos (%s) es correcto."
+#: includes/class-wp-security-bp-database.php:141
+msgid "Your database name is fine."
+msgstr "El nombre de tu base de datos es correcto."
 
-#. translators: %s: Name of the database
 #: includes/class-wp-security-bp-database.php:145
-msgid "Your database name (%s) is not secure enough."
-msgstr "El nombre de tu base de datos (%s) no es suficientemente seguro."
+msgid "Your database name is not secure enough."
+msgstr "El nombre de tu base de datos no es suficientemente seguro."
 
 #. translators: %s: Name of the wp-config file
-#: includes/class-wp-security-bp-files.php:200
-msgid "The file %s is on default location, it is recommended to store this file on the parent directory"
-msgstr "El archivo %s está en su ubicación por defecto, se recomienda almacenar este archivo en el directorio superior"
+#: includes/class-wp-security-bp-files.php:197
+msgid "The file is on default location, it is recommended to store this file on the parent directory"
+msgstr "El archivo está en su ubicación por defecto, se recomienda almacenar este archivo en el directorio superior"
 
 #. translators: %s: Name of the wp-config file
-#: includes/class-wp-security-bp-files.php:209
-msgid "Good job, %s is not on default location"
-msgstr "Buen trabajo, %s no está en su ubicación por defecto"
+#: includes/class-wp-security-bp-files.php:206
+msgid "Good job, the file is not on default location"
+msgstr "Buen trabajo, el archivo no está en su ubicación por defecto"
 
 #: includes/class-wp-security-bp-users.php:112
 msgid "You have danger admin ids!"

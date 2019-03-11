@@ -120,11 +120,20 @@ class WP_Security_BP_Database {
 		$this->response      = new WP_Security_BP_JSON();
 	}
 
+	/**
+	 * Check if name of database is in blacklist.
+	 *
+	 * @since    1.0.0
+	 * @param    string $message       The message of OK.
+	 * @param    string $short_desc    The description of the check.
+	 */
 	public function check_name() {
 
-		$short_desc = 'check DB name';
+		$options = array(
+			'short_desc' => 'check DB name',
+			'details'    => $this->db_name,
+		);
 		//push domain to $db_names_blacklist (coming soon)
-
 		/*
 		too simple check for the moment.
 		This will check removing every _ , - , . (at least)
@@ -133,20 +142,14 @@ class WP_Security_BP_Database {
 		$check = ! in_array( $this->db_name, $this->db_names_blacklist );
 
 		if ( $check ) {
-			$message = sprintf(
-				/* translators: %s: Name of the database */
-				__( 'Your database name (%s) is fine.', 'wp-security-bp' ),
-				$this->db_name
-			);
-			$this->response->pass( $message, $short_desc );
+			$message = __( 'Your database name is fine.', 'wp-security-bp' );
+
+			$this->response->pass( $message, $options );
 		} else {
-			$message = sprintf(
-				/* translators: %s: Name of the database */
-				__( 'Your database name (%s) is not secure enough.', 'wp-security-bp' ),
-				$this->db_name
-			);
-			$action = 'database-fix-name';
-			$this->response->fail( $message, $short_desc, $action );
+			$message           = __( 'Your database name is not secure enough.', 'wp-security-bp' );
+			$options['action'] = 'database-fix-name';
+
+			$this->response->fail( $message, $options );
 		}
 
 		return $this->response->json;
@@ -157,5 +160,4 @@ class WP_Security_BP_Database {
 	public function check_mysql_version() {}
 
 	public function check_tables_prefix() {}
-
 }

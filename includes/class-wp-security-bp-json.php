@@ -46,13 +46,25 @@ class WP_Security_BP_JSON {
 	 * @since    1.0.0
 	 * @param    string $message       The message of OK.
 	 * @param    string $short_desc    Optional. The description of the check.
+	 * @param    string $details       Optional. More params to front end.
 	 */
-	public function pass( $message, $short_desc = '' ) {
+	public function pass( $message, $options = [] ) {
+
+		foreach ( $options as $key => $value ) {
+			//variables variables
+			$$key = $value;
+		}
 
 		$this->json['status']     = 'passed';
-		$this->json['short_desc'] = $short_desc;
+		$this->json['short_desc'] = $short_desc || '';
 		$this->json['button']     = false;
 		$this->json['message']    = $message;
+		$this->json['details']    =
+			$details
+				? is_array( $details )
+					? $details
+					: array( $details )
+				: [];
 	}
 
 	/**
@@ -62,13 +74,25 @@ class WP_Security_BP_JSON {
 	 * @param    string $message       The message of failure.
 	 * @param    string $short_desc    Optional. The description of the check.
 	 * @param    string $action        Optional. The action that fires the button.
+	 * @param    string $details       Optional. More params to front end.
 	 */
-	public function fail( $message, $short_desc = '', $action = null ) {
+	public function fail( $message, $options = [] ) {
+
+		foreach ( $options as $key => $value ) {
+			//variables variables
+			$$key = $value;
+		}
 
 		$this->json['status']     = 'fail';
-		$this->json['short_desc'] = $short_desc;
+		$this->json['short_desc'] = $short_desc || '';
 		$this->json['button']     = true;
-		$this->json['action']     = $action;
+		$this->json['action']     = $action || '';
 		$this->json['message']    = $message;
+		$this->json['details']    =
+			$details
+				? is_array( $details )
+					? $details
+					: array( $details )
+				: [];
 	}
 }

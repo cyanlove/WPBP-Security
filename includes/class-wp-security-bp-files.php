@@ -191,28 +191,24 @@ class WP_Security_BP_Files {
 	 */
 	public function check_wp_config() {
 
-		$short_desc = 'Check wp-config.php location';
 		$is_in_root = $this->find_wp_config();
+		$options    = array(
+			'short_desc' => 'Check wp-config.php location',
+			'details'    => $this->wp_config,
+		);
 
 		if ( $is_in_root ) {
-			$message = sprintf(
-				/* translators: %s: Name of the wp-config file */
-				__( 'The file %s is on default location, it is recommended to store this file on the parent directory', 'wp-security-bp' ),
-				$this->wp_config
-			);
-			$action = 'files-fix-wp-config';
-			$this->response->fail( $message, $short_desc, $action );
+			$message           = __( 'The file is on default location, it is recommended to store this file on the parent directory', 'wp-security-bp' );
+			$options['action'] = 'files-fix-wp-config';
 
+			$this->response->fail( $message, $options );
 		} else {
-			$message = sprintf(
-				/* translators: %s: Name of the wp-config file */
-				__( 'Good job, %s is not on default location', 'wp-security-bp' ),
-				$this->wp_config
-			);
+			$message = __( 'Good job, the file is not on default location', 'wp-security-bp' );
+
 			$this->response->pass( $message, $short_desc );
 		}
-		return $this->response->json;
 
+		return $this->response->json;
 	}
 
 	/**
