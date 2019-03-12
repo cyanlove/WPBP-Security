@@ -26,10 +26,24 @@ class WP_Security_BP_JSON {
 	 * Final array to return formated for each case.
 	 *
 	 * @since    1.0.0
-	 * @access   protected
+	 * @access   public
 	 * @var      array $json    The array that will be returned to the admin (later transformed to JSON)
 	 */
 	public $json = array();
+
+	/**
+	 * The array containing the valid fields and how the should be escaped.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      array $valid    Valid fields as key and how the should be escaped as value.
+	 */
+	private $valid = array(
+		'short_desc' => 'html',
+		'message'    => 'html',
+		'action'     => 'html',
+		'data'       => 'html',
+	);
 
 	/**
 	 * Initialize the class and set its properties.
@@ -41,34 +55,56 @@ class WP_Security_BP_JSON {
 	}
 
 	/**
+	 * Validates and escapes the args passed
+	 *
+	 * @since    1.0.0
+	 * @param    array $args       The args to be validated ans escaped.
+	 */
+	private function validate( $args = array() ) {
+
+		foreach ( $args as $arg => $value ) {
+
+			if ( array_key_exists( $arg, $this->valid ) ) {
+
+				switch ( $this->valid[ $arg ] ) {
+					case 'html':
+						$value = esc_html( $value );
+						break;
+					default:
+						return;
+				}
+				$valid[ $arg ] = $value;
+			}
+		}
+
+		$this->json = array_merge( $this->json, $valid );
+	}
+
+	/**
 	 * If the test is passed, returns formated information.
 	 *
 	 * @since    1.0.0
-	 * @param    string $message       The message of OK.
-	 * @param    string $short_desc    Optional. The description of the check.
+	 * @param    array $args       The array of arguments.
 	 */
-	public function pass( $message, $short_desc = '' ) {
+	public function pass( $args = array() ) {
 
-		$this->json['status']     = 'passed';
-		$this->json['short_desc'] = $short_desc;
-		$this->json['button']     = false;
-		$this->json['message']    = $message;
+		$this->validate( $args );
+
+		$this->json['status'] = 'passed';
+		$this->json['button'] = false;
 	}
 
 	/**
 	 * If the test is fail, returns formated information.
 	 *
 	 * @since    1.0.0
-	 * @param    string $message       The message of failure.
-	 * @param    string $short_desc    Optional. The description of the check.
-	 * @param    string $action        Optional. The action that fires the button.
+	 * @param    array $args       The array of arguments.
 	 */
-	public function fail( $message, $short_desc = '', $action = null ) {
+	public function fail( $args = array() ) {
 
-		$this->json['status']     = 'fail';
-		$this->json['short_desc'] = $short_desc;
-		$this->json['button']     = true;
-		$this->json['action']     = $action;
-		$this->json['message']    = $message;
+		$this->validate( $args );
+
+		$this->json['status'] = 'fail';
+		$this->json['button'] = true;
 	}
 }

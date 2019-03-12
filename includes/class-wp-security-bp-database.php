@@ -122,7 +122,8 @@ class WP_Security_BP_Database {
 
 	public function check_name() {
 
-		$short_desc = 'check DB name';
+		$args['short_desc'] = 'check DB name';
+		$args['data']       = $this->db_name;
 		//push domain to $db_names_blacklist (coming soon)
 
 		/*
@@ -133,20 +134,12 @@ class WP_Security_BP_Database {
 		$check = ! in_array( $this->db_name, $this->db_names_blacklist );
 
 		if ( $check ) {
-			$message = sprintf(
-				/* translators: %s: Name of the database */
-				__( 'Your database name (%s) is fine.', 'wp-security-bp' ),
-				$this->db_name
-			);
-			$this->response->pass( $message, $short_desc );
+			$args['message'] = __( 'Your database name is fine.', 'wp-security-bp' );
+			$this->response->pass( $args );
 		} else {
-			$message = sprintf(
-				/* translators: %s: Name of the database */
-				__( 'Your database name (%s) is not secure enough.', 'wp-security-bp' ),
-				$this->db_name
-			);
-			$action = 'database-fix-name';
-			$this->response->fail( $message, $short_desc, $action );
+			$args['message'] = __( 'Your database name is not secure enough.', 'wp-security-bp' );
+			$args['action']  = 'database-fix-name';
+			$this->response->fail( $args );
 		}
 
 		return $this->response->json;

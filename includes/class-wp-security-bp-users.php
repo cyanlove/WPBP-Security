@@ -100,8 +100,8 @@ class WP_Security_BP_Users {
 
 	public function check_users_ids() {
 
-		$short_desc = 'Check admin id';
-		$check      = false;
+		$args['short_desc'] = 'Check admin id';
+		$check              = false;
 
 		foreach ( $this->users as $user ) {
 			if ( $user->ID <= $this->range_scan_id ) {
@@ -109,12 +109,12 @@ class WP_Security_BP_Users {
 			}
 		}
 		if ( true === $check ) {
-				$message = __( 'You have danger admin ids!', 'wp-security-bp' );
-				$action  = 'users-fix-admin-id';
-				$this->response->fail( $message, $short_desc, $action );
+				$args['message'] = __( 'You have danger admin ids!', 'wp-security-bp' );
+				$args['action']  = 'users-fix-admin-id';
+				$this->response->fail( $args );
 		} else {
-				$message = __( 'Your admin ids are secure!', 'wp-security-bp' );
-				$this->response->pass( $message, $short_desc );
+				$args['message'] = __( 'Your admin ids are secure!', 'wp-security-bp' );
+				$this->response->pass( $args );
 		}
 
 		return $this->response->json;
@@ -122,8 +122,8 @@ class WP_Security_BP_Users {
 
 	public function check_admin_name() {
 
-		$short_desc = 'Check admin user login';
-		$check      = false;
+		$args['short_desc'] = 'Check admin user login';
+		$check              = false;
 
 		foreach ( $this->users as $user ) {
 			if ( $user->caps['administrator'] && in_array( $user->user_login, $this->blacklists_admin_names, true ) ) {
@@ -131,12 +131,12 @@ class WP_Security_BP_Users {
 			}
 		}
 		if ( true === $check ) {
-				$message = __( 'You have danger admin user login!', 'wp-security-bp' );
-				$action  = 'users-fix-admin-login';
-				$this->response->fail( $message, $short_desc, $action );
+				$args['message'] = __( 'You have danger admin user login!', 'wp-security-bp' );
+				$args['action']  = 'users-fix-admin-login';
+				$this->response->fail( $args );
 		} else {
-				$message = __( 'Your admin user login are secure!', 'wp-security-bp' );
-				$this->response->pass( $message, $short_desc );
+				$args['message'] = __( 'Your admin user login are secure!', 'wp-security-bp' );
+				$this->response->pass( $args );
 		}
 
 		return $this->response->json;
