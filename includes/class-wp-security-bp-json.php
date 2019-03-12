@@ -63,6 +63,7 @@ class WP_Security_BP_JSON {
 	public function pass( $short_desc = '', $message ) {
 
 		$this->json['status']     = 'passed';
+		$this->json['id']         = uniqid();
 		$this->json['short_desc'] = $short_desc;
 		$this->json['button']     = false;
 		$this->json['message']    = sprintf(
@@ -79,6 +80,7 @@ class WP_Security_BP_JSON {
 	public function fail( $short_desc = '', $message, $action = null ) {
 
 		$this->json['status']     = 'fail';
+		$this->json['id']         = uniqid();
 		$this->json['short_desc'] = $short_desc;
 		$this->json['button']     = true;
 		$this->json['action']     = $action;

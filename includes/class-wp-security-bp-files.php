@@ -194,12 +194,14 @@ class WP_Security_BP_Files {
 
 		if ( $is_in_root ) {
 			$response['status']     = 'fail';
+			$response['id']         = uniqid();
 			$response['short_desc'] = 'Check wp-config.php location';
 			$response['message']    = __( 'The file wp-config.php is in default location, it is recommended to store this file on the parent directory', $this->plugin_name );
 			$response['button']     = true;
 			$response['action']     = 'files-fix-wp-config';
 		} else {
 			$response['status']     = 'passed';
+			$response['id']         = uniqid();
 			$response['short_desc'] = 'Check wp-config.php location';
 			$response['message']    = __( 'Good job, wp-config.php not on default location!!!', $this->plugin_name );
 			$response['button']     = false;
