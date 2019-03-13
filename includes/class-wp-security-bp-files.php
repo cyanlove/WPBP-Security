@@ -101,14 +101,15 @@ class WP_Security_BP_Files {
 	 * @since    1.0.0
 	 * @param    string $plugin_name       The name of this plugin.
 	 * @param    string $request_uri       The URI from the request is made.
+	 * @param    string $json              JSON class instance.
 	 */
-	public function __construct( $plugin_name, $request_uri ) {
+	public function __construct( $plugin_name, $request_uri, $json ) {
 
 		$this->plugin_name       = $plugin_name;
 		$this->request_uri       = $request_uri;
 		$this->nonce_action_name = 'wp-security-bp-file-access';
 		$this->wp_config         = 'wp-config.php';
-		$this->response          = new WP_Security_BP_JSON();
+		$this->response          = $json;
 
 		$access_type = function_exists( 'get_filesystem_method' ) ? get_filesystem_method() : '';
 		if ( 'direct' === $access_type ) {
@@ -211,8 +212,6 @@ class WP_Security_BP_Files {
 			);
 			$this->response->pass( $args );
 		}
-		return $this->response->json;
-
 	}
 
 	/**

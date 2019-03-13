@@ -23,13 +23,22 @@
  */
 class WP_Security_BP_JSON {
 	/**
+	 * Each array to return formated for each case.
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 * @var      array $json    The array that will be validated and properly stored
+	 */
+	public $json = array();
+
+	/**
 	 * Final array to return formated for each case.
 	 *
 	 * @since    1.0.0
 	 * @access   public
-	 * @var      array $json    The array that will be returned to the admin (later transformed to JSON)
+	 * @var      array $response    The array that will be returned to the admin (later transformed to response)
 	 */
-	public $json = array();
+	private $response = array();
 
 	/**
 	 * The array containing the valid fields and how the should be escaped.
@@ -67,12 +76,15 @@ class WP_Security_BP_JSON {
 			if ( array_key_exists( $arg, $this->valid ) ) {
 
 				switch ( $this->valid[ $arg ] ) {
+
 					case 'html':
 						$value = esc_html( $value );
 						break;
+
 					default:
 						return;
 				}
+
 				$valid[ $arg ] = $value;
 			}
 		}
@@ -89,6 +101,7 @@ class WP_Security_BP_JSON {
 	public function pass( $args = array() ) {
 
 		$this->validate( $args );
+		$this->collect( $this->json );
 	}
 
 	/**
@@ -100,7 +113,29 @@ class WP_Security_BP_JSON {
 	public function fail( $args = array() ) {
 
 		$this->validate( $args );
-
 		$this->json['status'] = 'fail';
+		$this->collect( $this->json );
+	}
+
+	/**
+	 * Function to collect all checks data in final JSON.
+	 *
+	 * @since    1.0.0
+	 * @param    array $arr       Array to push to checks bundle.
+	 */
+	private function collect( $json_unique ) {
+
+		array_push( $this->response, $json_unique );
+	}
+
+	/**
+	 * Send final JSON to front, and die() code
+	 *
+	 * @since    1.0.0
+	 * @param    array $arr       collected Array with each check to send to front end.
+	 */
+	public function response() {
+
+		wp_send_json( $this->response );
 	}
 }

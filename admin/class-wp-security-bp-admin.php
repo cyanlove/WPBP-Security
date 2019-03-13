@@ -58,6 +58,17 @@ class WP_Security_BP_Admin {
 	private $hook_suffix;
 
 	/**
+	 * JSON class instance to validate, store, and finally send checks data.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      array    $json    JSON class instance.
+	 */
+	private $json;
+
+
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -69,7 +80,7 @@ class WP_Security_BP_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 		$this->admin_url   = admin_url( 'options-general.php?page=' . $this->plugin_name );
-
+		$this->json        = new WP_Security_BP_JSON();
 	}
 
 	/**
@@ -170,17 +181,17 @@ class WP_Security_BP_Admin {
 	 */
 	public function check_all() {
 		// Class Files calls.
-		$files      = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
-		$response[] = $files->check_wp_config();
+		$files      = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url, $this->json );
+		$files->check_wp_config();
 		// Class Users calls.
-		$users      = new WP_Security_BP_Users( $this->plugin_name, $this->admin_url );
-		$response[] = $users->check_users_ids();
-		$response[] = $users->check_admin_name();
+		$users      = new WP_Security_BP_Users( $this->plugin_name, $this->json );
+		$users->check_users_ids();
+		$users->check_admin_name();
 		// Class Database checks.
-		$db         = new WP_Security_BP_Database( $this->plugin_name );
-		$response[] = $db->check_name();
+		$db         = new WP_Security_BP_Database( $this->plugin_name, $this->json );
+		$db->check_name();
 
-		wp_send_json( $response );
+		$this->json->response();
 	}
 
 	/**
