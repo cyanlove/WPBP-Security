@@ -191,8 +191,8 @@ class WP_Security_BP_Files {
 	 */
 	public function check_wp_config() {
 
-		$args['short_desc'] = 'Check <br>wp-config.php</br> location';
-		$is_in_root = $this->find_wp_config();
+		$args['short_desc'] = 'Check wp-config.php location';
+		$is_in_root         = $this->find_wp_config();
 
 		if ( $is_in_root ) {
 			$args['message'] = sprintf(
