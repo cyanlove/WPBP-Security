@@ -108,6 +108,7 @@ class WP_Security_BP_Files {
 		$this->request_uri       = $request_uri;
 		$this->nonce_action_name = 'wp-security-bp-file-access';
 		$this->wp_config         = 'wp-config.php';
+		$this->response          = new WP_Security_BP_JSON();
 
 		$access_type = function_exists( 'get_filesystem_method' ) ? get_filesystem_method() : '';
 		if ( 'direct' === $access_type ) {
@@ -181,7 +182,7 @@ class WP_Security_BP_Files {
 	}
 
 	/**
-	 * This will be deprecated
+	 * Checks if wp-config.php is on default location or not.
 	 *
 	 * Long desc
 	 *
@@ -190,22 +191,27 @@ class WP_Security_BP_Files {
 	 */
 	public function check_wp_config() {
 
-		$is_in_root = $this->find_wp_config();
+		$args['short_desc'] = 'Check wp-config.php location';
+		$is_in_root         = $this->find_wp_config();
 
 		if ( $is_in_root ) {
-			$response['status']     = 'fail';
-			$response['short_desc'] = 'Check wp-config.php location';
-			$response['message']    = __( 'The file wp-config.php is in default location, it is recommended to store this file on the parent directory', $this->plugin_name );
-			$response['button']     = true;
-			$response['action']     = 'files-fix-wp-config';
+			$args['message'] = sprintf(
+				/* translators: %s: Name of the wp-config file */
+				__( 'The file %s is on default location, it is recommended to store this file on the parent directory', 'wp-security-bp' ),
+				$this->wp_config
+			);
+			$args['action'] = 'files-fix-wp-config';
+			$this->response->fail( $args );
+
 		} else {
-			$response['status']     = 'passed';
-			$response['short_desc'] = 'Check wp-config.php location';
-			$response['message']    = __( 'Good job, wp-config.php not on default location!!!', $this->plugin_name );
-			$response['button']     = false;
-			$response['action']     = '';
+			$args['message'] = sprintf(
+				/* translators: %s: Name of the wp-config file */
+				__( 'Good job, %s is not on default location', 'wp-security-bp' ),
+				$this->wp_config
+			);
+			$this->response->pass( $args );
 		}
-		return $response;
+		return $this->response->json;
 
 	}
 

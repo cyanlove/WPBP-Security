@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The file that defines the JSON array class
  *
@@ -22,75 +21,86 @@
  * @subpackage wp_security_bp/includes
  * @author     Cyan Lovers <hello@cyanlove.com>
  */
-
 class WP_Security_BP_JSON {
 	/**
 	 * Final array to return formated for each case.
 	 *
 	 * @since    1.0.0
-	 * @access   protected
-	 * @var      array    $json    The array that will be returned to the admin (later transformed to JSON)
+	 * @access   public
+	 * @var      array $json    The array that will be returned to the admin (later transformed to JSON)
 	 */
 	public $json = array();
 
 	/**
-	 * The unique identifier of this plugin.
+	 * The array containing the valid fields and how the should be escaped.
 	 *
 	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+	 * @access   private
+	 * @var      array $valid    Valid fields as key and how the should be escaped as value.
 	 */
-	protected $plugin_name;
+	private $valid = array(
+		'short_desc' => 'html',
+		'message'    => 'html',
+		'action'     => 'html',
+		'data'       => 'html',
+	);
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param    string    $plugin_name       The name of this plugin.
 	 */
-	public function __construct( $plugin_name ) {
+	public function __construct() {
 
-		$this->plugin_name = $plugin_name;
+	}
 
+	/**
+	 * Validates and escapes the args passed
+	 *
+	 * @since    1.0.0
+	 * @param    array $args       The args to be validated ans escaped.
+	 */
+	private function validate( $args = array() ) {
+
+		foreach ( $args as $arg => $value ) {
+
+			if ( array_key_exists( $arg, $this->valid ) ) {
+
+				switch ( $this->valid[ $arg ] ) {
+					case 'html':
+						$value = esc_html( $value );
+						break;
+					default:
+						return;
+				}
+				$valid[ $arg ] = $value;
+			}
+		}
+
+		$this->json = array_merge( $this->json, $valid );
 	}
 
 	/**
 	 * If the test is passed, returns formated information.
 	 *
 	 * @since    1.0.0
-	 * @param    string    $message       The message of OK.
+	 * @param    array $args       The array of arguments.
 	 */
-	public function pass( $short_desc = '', $message ) {
+	public function pass( $args = array() ) {
 
-		$this->json['status']     = 'passed';
-		$this->json['short_desc'] = $short_desc;
-		$this->json['button']     = false;
-		$this->json['message']    = sprintf(
-			/* translators: %s: message, plugin name */
-			__(
-				'%s',
-				'%s'
-			),
-			$message,
-			$this->plugin_name
-		);
+		$this->validate( $args );
 	}
 
-	public function fail( $short_desc = '', $message, $action = null ) {
+	/**
+	 * If the test is fail, returns formated information.
+	 *
+	 * @since    1.0.0
+	 * @param    array $args       The array of arguments.
+	 */
+	public function fail( $args = array() ) {
 
-		$this->json['status']     = 'fail';
-		$this->json['short_desc'] = $short_desc;
-		$this->json['button']     = true;
-		$this->json['action']     = $action;
-		$this->json['message']    = sprintf(
+		$this->validate( $args );
 
-			/* translators: %s: message, plugin name */
-			__(
-				'%s',
-				'%s'
-			),
-			$message,
-			$this->plugin_name
-		);
+		$this->json['status'] = 'fail';
 	}
 }
