@@ -233,4 +233,201 @@ class WP_Security_BP_Files {
 
 	}
 
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function check_debug() {
+
+		$args['short_desc'] = 'Check debug mode';
+		$is_defined         = $this->check_constant( 'WP_DEBUG', false );
+
+		if ( ! $is_defined ) {
+
+			$args['message'] = __( 'You have debug mode on, turn it of when you are on production', 'wp-security-bp' );
+			$args['action']  = 'files-fix-debug';
+			$this->response->fail( $args );
+
+		} else {
+
+			$args['message'] = __( 'Good job, you have debug mode off', 'wp-security-bp' );
+			$this->response->pass( $args );
+
+		}
+
+		return $this->response->json;
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function check_file_edit() {
+
+		$args['short_desc'] = 'Check file editing mode';
+		$is_defined         = $this->check_constant( 'DISALLOW_FILE_EDIT', true );
+
+		if ( ! $is_defined ) {
+
+			$args['message'] = __( 'You have file editing mode on, turn it of when you are on production', 'wp-security-bp' );
+			$args['action']  = 'files-fix-file-editing';
+			$this->response->fail( $args );
+
+		} else {
+
+			$args['message'] = __( 'Good job, you have file editing mode off', 'wp-security-bp' );
+			$this->response->pass( $args );
+
+		}
+
+		return $this->response->json;
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function check_auto_updates() {
+
+		$args['short_desc'] = 'Check auto updates mode';
+		$is_defined         = $this->check_constant( 'WP_AUTO_UPDATE_CORE', 'minor' );
+
+		if ( ! $is_defined ) {
+
+			$args['message'] = __( 'You have auto updates mode on, turn it of when you are on production', 'wp-security-bp' );
+			$args['action']  = 'files-fix-auto-updates';
+			$this->response->fail( $args );
+
+		} else {
+
+			$args['message'] = __( 'Good job, you have auto updates mode off', 'wp-security-bp' );
+			$this->response->pass( $args );
+
+		}
+
+		return $this->response->json;
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function fix_debug() {
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function fix_file_edit() {
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function fix_auto_updates() {
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function read_wp_config() {
+		$path = $this->find_wp_config() ? $this->root : $this->parent_root;
+		if ( $this->wp_filesystem->is_readable( $path . $this->wp_config ) ) {
+
+			$content   = $this->wp_filesystem->get_contents_array( $path . $this->wp_config );
+			$constants = array();
+			foreach ( $content as $line => $value ) {
+				if ( false !== strpos( $value, 'define' ) ) {
+					$constants[ $line ] = $value;
+				}
+			}
+		}
+		return $constants;
+	}
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function define_constants_array() {
+		$this->wp_config_constants = array(
+			'WP_DEBUG'            => false,
+			'DISALLOW_FILE_EDIT'  => true,
+			'WP_AUTO_UPDATE_CORE' => true,
+		);
+	}
+
+
+	/**
+	 * The method that checks if a constant with a certain value is defined or not.
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @param    string $constant    The name of the constant to check.
+	 * @param    string $value       The value of the constant to check.
+	 * @access   private
+	 * @return   bool
+	 */
+	private function check_constant( $constant, $value ) {
+		return defined( $constant ) && constant( $constant ) === $value;
+	}
+
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+	public function check_constants() {
+		$valid = array();
+		foreach ( $this->wp_config_constants as $constant => $value ) {
+			$valid[ $constant ] = $this->check_constant( $constant, $value );
+		};
+		return $valid;
+	}
+
 }
