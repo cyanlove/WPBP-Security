@@ -103,6 +103,7 @@ class WP_Security_BP_JSON {
 		$this->validate( $args );
 		$this->json['status'] = 'pass';
 		$this->collect( $this->json );
+  
 	}
 
 	/**

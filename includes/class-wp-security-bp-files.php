@@ -196,6 +196,7 @@ class WP_Security_BP_Files {
 		$is_in_root         = $this->find_wp_config();
 
 		if ( $is_in_root ) {
+
 			$args['message'] = sprintf(
 				/* translators: %s: Name of the wp-config file */
 				__( 'The file %s is on default location, it is recommended to store this file on the parent directory', 'wp-security-bp' ),
@@ -211,6 +212,7 @@ class WP_Security_BP_Files {
 				$this->wp_config
 			);
 			$this->response->pass( $args );
+
 		}
 	}
 

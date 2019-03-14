@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   mode: 'development',
-  entry: './admin/src/js/wp-security-bp-view.js',
+  entry: './admin/src/js/wp-security-bp-admin.js',
   output: {
     path: path.resolve(__dirname, 'admin/js'),
     filename: 'wp-security-bp-admin.min.js'
