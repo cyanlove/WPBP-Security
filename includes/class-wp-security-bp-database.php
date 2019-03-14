@@ -108,8 +108,9 @@ class WP_Security_BP_Database {
 	 *
 	 * @since    1.0.0
 	 * @param    string    $plugin_name       The name of this plugin.
+	 * @param    string $json                 JSON class instance.
 	 */
-	public function __construct( $plugin_name ) {
+	public function __construct( $plugin_name, $json ) {
 
 		$this->plugin_name = $plugin_name;
 		//$this->domain = ***
@@ -117,9 +118,14 @@ class WP_Security_BP_Database {
 		$this->db_name       = $wpdb->dbname;
 		$this->db_version    = $wpdb->db_version();
 		$this->tables_prefix = $wpdb->prefix;
-		$this->response      = new WP_Security_BP_JSON();
+		$this->response      = $json;
 	}
 
+	/**
+	 * Cchecks DB name and decides ig its enough secure or not.
+	 *
+	 * @since    1.0.0
+	 */
 	public function check_name() {
 
 		$args['short_desc'] = 'check DB name';
@@ -141,8 +147,6 @@ class WP_Security_BP_Database {
 			$args['action']  = 'database-fix-name';
 			$this->response->fail( $args );
 		}
-
-		return $this->response->json;
 	}
 
 	public function check_user() {}

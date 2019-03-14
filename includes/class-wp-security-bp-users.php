@@ -87,14 +87,15 @@ class WP_Security_BP_Users {
 	 *
 	 * @since    1.0.0
 	 * @param    string $plugin_name       The name of this plugin.
+	 * @param    string $json              JSON class instance.
 	 */
 
-	public function __construct( $plugin_name ) {
+	public function __construct( $plugin_name, $json ) {
 
 		$this->plugin_name   = $plugin_name;
 		$this->range_scan_id = 10;
 		$this->users         = get_users();
-		$this->response      = new WP_Security_BP_JSON();
+		$this->response      = $json;
 
 	}
 
