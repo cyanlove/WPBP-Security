@@ -89,6 +89,7 @@ class WP_Security_BP_JSON {
 	public function pass( $args = array() ) {
 
 		$this->validate( $args );
+
 	}
 
 	/**
@@ -100,7 +101,6 @@ class WP_Security_BP_JSON {
 	public function fail( $args = array() ) {
 
 		$this->validate( $args );
-
 		$this->json['status'] = 'fail';
 	}
 }

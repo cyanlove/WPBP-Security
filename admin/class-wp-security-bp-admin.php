@@ -117,7 +117,6 @@ class WP_Security_BP_Admin {
 		 * class.
 		 */
 		if ( $hook_suffix === $this->hook_suffix ) {
-			wp_enqueue_script( $this->plugin_name . '-vue', 'https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js', array(), '2.5.17', true );
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.min.js', array(), $this->version, true );
 		}
 
