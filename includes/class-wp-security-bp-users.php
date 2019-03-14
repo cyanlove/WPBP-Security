@@ -118,7 +118,6 @@ class WP_Security_BP_Users {
 				$this->response->pass( $args );
 		}
 
-		return $this->response->json;
 	}
 
 	public function check_admin_name() {
@@ -140,7 +139,6 @@ class WP_Security_BP_Users {
 				$this->response->pass( $args );
 		}
 
-		return $this->response->json;
 	}
 
 }
