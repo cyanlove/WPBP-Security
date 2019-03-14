@@ -9,7 +9,7 @@
 			<button 
 				id="fix" 
 				v-show="checkinfo.status === 'fail'" 
-				@click="fix(checkinfo.action)"
+				@click="$emit('fix',checkinfo.action)"
 			>
 			 FIX
 			</button>
@@ -28,27 +28,12 @@ export default{
 		}
 	},
 	methods:{
-		fix(e){
-			/*---FIX ACTION: inactive at the moment.---*/
-				/*var params = new URLSearchParams();
-				params.append('action', e);
-
-				axios.post(ajaxurl, params)
-				.then( response => {
-					this.info = response.data;
-					console.log(this.info)
-				})
-				.catch( error => {
-					console.log(error);
-				});*/
-			alert(e)
-		},
 		togAccordeon(event){
 			var panel = event.target.nextElementSibling;
-			if(event.target.id == 'fix'){
+			if ( event.target.id == 'fix' ){
 				return
 			}
-		    if (panel.style.display === "block") {
+		    if ( panel.style.display === "block" ) {
 		      panel.style.display = "none";
 		    } else {
 		      panel.style.display = "block";
