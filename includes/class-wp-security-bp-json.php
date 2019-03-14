@@ -101,6 +101,7 @@ class WP_Security_BP_JSON {
 	public function pass( $args = array() ) {
 
 		$this->validate( $args );
+		$this->json['status'] = 'pass';
 		$this->collect( $this->json );
 	}
 
