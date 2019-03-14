@@ -226,13 +226,13 @@ class WP_Security_BP_Admin {
 				$method = $actions[ $action ];
 				switch ( $key ) {
 					case 'files':
-						$class = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url );
+						$class = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url, $this->json );
 						break;
 					case 'users':
-						$class = new WP_Security_BP_Users( $this->plugin_name );
+						$class = new WP_Security_BP_Users( $this->plugin_name, $this->json );
 						break;
 					case 'database':
-						$class = new WP_Security_BP_Database( $this->plugin_name );
+						$class = new WP_Security_BP_Database( $this->plugin_name, $this->json );
 						break;
 					default:
 						wp_die();
