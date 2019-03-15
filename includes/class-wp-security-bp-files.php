@@ -338,11 +338,7 @@ class WP_Security_BP_Files {
 	 */
 	public function fix_debug() {
 
-<<<<<<< HEAD
-		return $this->write_wp_config( 'WP_DEBUG', 'false', 'true' );
-=======
 		return $this->write_wp_config( 'WP_DEBUG', 'false' );
->>>>>>> files
 
 	}
 
