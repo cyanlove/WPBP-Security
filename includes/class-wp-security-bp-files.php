@@ -206,6 +206,7 @@ class WP_Security_BP_Files {
 			$this->response->fail( $args );
 
 		} else {
+
 			$args['message'] = sprintf(
 				/* translators: %s: Name of the wp-config file */
 				__( 'Good job, %s is not on default location', 'wp-security-bp' ),
@@ -214,6 +215,7 @@ class WP_Security_BP_Files {
 			$this->response->pass( $args );
 
 		}
+
 	}
 
 	/**
@@ -226,7 +228,7 @@ class WP_Security_BP_Files {
 	 */
 	public function fix_wp_config() {
 
-		$this->wp_filesystem->move(
+		return $this->wp_filesystem->move(
 			$this->root . $this->wp_config,
 			$this->parent_root . $this->wp_config,
 			false // Don't overwrites if exists.
@@ -249,7 +251,7 @@ class WP_Security_BP_Files {
 
 		if ( ! $is_defined ) {
 
-			$args['message'] = __( 'You have debug mode on, turn it of when you are on production', 'wp-security-bp' );
+			$args['message'] = __( 'You have debug mode on, turn it off when you are on production', 'wp-security-bp' );
 			$args['action']  = 'files-fix-debug';
 			$this->response->fail( $args );
 
@@ -259,8 +261,6 @@ class WP_Security_BP_Files {
 			$this->response->pass( $args );
 
 		}
-
-		return $this->response->json;
 
 	}
 
@@ -320,8 +320,6 @@ class WP_Security_BP_Files {
 
 		}
 
-		return $this->response->json;
-
 	}
 
 	/**
@@ -333,6 +331,8 @@ class WP_Security_BP_Files {
 	 * @access   public
 	 */
 	public function fix_debug() {
+
+		return $this->write_wp_config( 'WP_DEBUG', 'false', 'true' );
 
 	}
 
@@ -366,22 +366,82 @@ class WP_Security_BP_Files {
 	 * Long desc
 	 *
 	 * @since    1.0.0
-	 * @access   public
+	 * @param    string $constant    The name of the constant to write.
+	 * @param    string $add         The value of the constant to add.
+	 * @param    string $remove      The value of the constant to remove.
+	 * @access   private
 	 */
-	public function read_wp_config() {
+	private function write_wp_config( $constant, $add, $remove ) {
+
 		$path = $this->find_wp_config() ? $this->root : $this->parent_root;
+
+		if ( $this->wp_filesystem->is_writable( $path . $this->wp_config ) ) {
+
+			$location = $this->read_wp_config( $constant );
+
+			if ( false === $location ) {
+				return false;
+			}
+
+			// Compatiblility PHP < 7.3.
+			if ( function_exists( 'array_key_first' ) ) {
+				$line = array_key_first( $location );
+			} else {
+				$line = array_keys( $location )[0];
+			}
+
+			$content_as_array  = $this->wp_filesystem->get_contents_array( $path . $this->wp_config );
+			$string_to_replace = $content_as_array[ $line ];
+			$new_string        = str_replace( $remove, $add, $string_to_replace );
+			$content_as_string = $this->wp_filesystem->get_contents( $path . $this->wp_config );
+			$new_content       = str_replace( $string_to_replace, $new_string, $content_as_string );
+			return $this->wp_filesystem->put_contents( $path . $this->wp_config, $new_content );
+
+		} else {
+
+			return false;
+
+		}
+
+	}
+
+	/**
+	 * Short desc
+	 *
+	 * Long desc
+	 *
+	 * @since    1.0.0
+	 * @param    string $constant    The name of the constant to check.
+	 * @access   private
+	 */
+	private function read_wp_config( $constant = false ) {
+
+		$path = $this->find_wp_config() ? $this->root : $this->parent_root;
+
 		if ( $this->wp_filesystem->is_readable( $path . $this->wp_config ) ) {
 
 			$content   = $this->wp_filesystem->get_contents_array( $path . $this->wp_config );
 			$constants = array();
+
 			foreach ( $content as $line => $value ) {
-				if ( false !== strpos( $value, 'define' ) ) {
+				$value        = trim( str_replace( ' ', '', $value ) );
+				$has_define   = strpos( $value, 'define' );
+				$has_constant = $constant ? strpos( $value, $constant ) : true;
+				if ( false !== $has_define && false !== $has_constant ) {
 					$constants[ $line ] = $value;
 				}
 			}
+
+			return $constants;
+
+		} else {
+
+			return false;
+
 		}
-		return $constants;
+
 	}
+
 	/**
 	 * Short desc
 	 *
@@ -411,7 +471,9 @@ class WP_Security_BP_Files {
 	 * @return   bool
 	 */
 	private function check_constant( $constant, $value ) {
+
 		return defined( $constant ) && constant( $constant ) === $value;
+
 	}
 
 

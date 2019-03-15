@@ -182,6 +182,9 @@ class WP_Security_BP_Admin {
 		// Class Files calls.
 		$files      = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url, $this->json );
 		$files->check_wp_config();
+		$files->check_debug();
+		$files->check_file_edit();
+		$files->check_auto_updates();
 		// Class Users calls.
 		$users      = new WP_Security_BP_Users( $this->plugin_name, $this->json );
 		$users->check_users_ids();
@@ -219,6 +222,7 @@ class WP_Security_BP_Admin {
 			$actions = array(
 				'class-example-action' => 'example_class_method', // for example purpose only.
 				'files-fix-wp-config'  => 'fix_wp_config',
+				'files-fix-debug'      => 'fix_debug',
 			);
 			if ( array_key_exists( $action, $actions ) ) {
 				$key    = strstr( $action, '-', true );
@@ -240,6 +244,9 @@ class WP_Security_BP_Admin {
 				$class->$method();
 				$this->check_all();
 
+			} else {
+				// This should be checked before release.
+				$this->check_all();
 			}
 		}
 
