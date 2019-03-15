@@ -220,9 +220,11 @@ class WP_Security_BP_Admin {
 			 * The value is the method name and must be exact excluding the brackets '()'.
 			 */
 			$actions = array(
-				'class-example-action' => 'example_class_method', // for example purpose only.
-				'files-fix-wp-config'  => 'fix_wp_config',
-				'files-fix-debug'      => 'fix_debug',
+				'class-example-action'   => 'example_class_method', // for example purpose only.
+				'files-fix-wp-config'    => 'fix_wp_config',
+				'files-fix-debug'        => 'fix_debug',
+				'files-fix-file-edit'    => 'fix_file_edit',
+				'files-fix-auto-updates' => 'fix_auto_updates',
 			);
 			if ( array_key_exists( $action, $actions ) ) {
 				$key    = strstr( $action, '-', true );
