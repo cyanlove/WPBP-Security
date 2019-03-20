@@ -280,7 +280,7 @@ class WP_Security_BP_Files {
 		if ( ! $is_defined ) {
 
 			$args['message'] = __( 'You have file editing mode on, turn it of when you are on production', 'wp-security-bp' );
-			$args['action']  = 'files-fix-file-editing';
+			$args['action']  = 'files-fix-file-edit';
 			$this->response->fail( $args );
 
 		} else {
@@ -289,8 +289,6 @@ class WP_Security_BP_Files {
 			$this->response->pass( $args );
 
 		}
-
-		return $this->response->json;
 
 	}
 
@@ -304,10 +302,18 @@ class WP_Security_BP_Files {
 	 */
 	public function check_auto_updates() {
 
-		$args['short_desc'] = 'Check auto updates mode';
-		$is_defined         = $this->check_constant( 'WP_AUTO_UPDATE_CORE', 'minor' );
+		// Checks still in development.
+		$args['short_desc']   = 'Check auto updates mode';
+		$updater_disabled     = $this->check_constant( 'AUTOMATIC_UPDATER_DISABLED', true );
+		$update_core_disabled = $this->check_constant( 'WP_AUTO_UPDATE_CORE', false );
+		$update_core_enabled  = $this->check_constant( 'WP_AUTO_UPDATE_CORE', true );
+		$update_core_minor    = $this->check_constant( 'WP_AUTO_UPDATE_CORE', 'minor' );
+		$not_update_core      = defined( 'WP_AUTO_UPDATE_CORE' ) && WP_AUTO_UPDATE_CORE != 'minor';
 
-		if ( ! $is_defined ) {
+		// Still have to check whether a filter has been used to block auto updates or not.
+		// $check = has_filter( 'automatic_updater_disabled' );
+
+		if ( $updater_disabled || $not_update_core ) {
 
 			$args['message'] = __( 'You have auto updates mode on, turn it of when you are on production', 'wp-security-bp' );
 			$args['action']  = 'files-fix-auto-updates';
@@ -332,7 +338,7 @@ class WP_Security_BP_Files {
 	 */
 	public function fix_debug() {
 
-		return $this->write_wp_config( 'WP_DEBUG', 'false', 'true' );
+		return $this->write_wp_config( 'WP_DEBUG', 'false' );
 
 	}
 
@@ -346,6 +352,8 @@ class WP_Security_BP_Files {
 	 */
 	public function fix_file_edit() {
 
+		return $this->write_wp_config( 'DISALLOW_FILE_EDIT', 'true' );
+
 	}
 
 	/**
@@ -358,6 +366,11 @@ class WP_Security_BP_Files {
 	 */
 	public function fix_auto_updates() {
 
+		// Still have to fix if there is a filter that overrides this.
+		$enable_updater = $this->write_wp_config( 'AUTOMATIC_UPDATER_DISABLED', 'false' );
+		$enable_core    = $this->write_wp_config( 'WP_AUTO_UPDATE_CORE', 'minor' );
+		return $enable_updater && $enable_core;
+
 	}
 
 	/**
@@ -367,34 +380,36 @@ class WP_Security_BP_Files {
 	 *
 	 * @since    1.0.0
 	 * @param    string $constant    The name of the constant to write.
-	 * @param    string $add         The value of the constant to add.
-	 * @param    string $remove      The value of the constant to remove.
+	 * @param    string $value       The value of the constant to write.
 	 * @access   private
 	 */
-	private function write_wp_config( $constant, $add, $remove ) {
+	private function write_wp_config( $constant, $value ) {
 
 		$path = $this->find_wp_config() ? $this->root : $this->parent_root;
 
 		if ( $this->wp_filesystem->is_writable( $path . $this->wp_config ) ) {
 
-			$location = $this->read_wp_config( $constant );
+			$value      = ( 'true' === $value || 'false' === $value ) ? $value : "'$value'";
+			$regex      = "/define\s*\(\s*('|\")$constant('|\").*?;/";
+			$new_define = "define( '$constant', $value );";
+			$content    = $this->wp_filesystem->get_contents( $path . $this->wp_config );
 
-			if ( false === $location ) {
-				return false;
-			}
+			$is_in_file = preg_match( $regex, $content );
 
-			// Compatiblility PHP < 7.3.
-			if ( function_exists( 'array_key_first' ) ) {
-				$line = array_key_first( $location );
+			if ( $is_in_file ) {
+
+				// Constant is already defined in wp-config.php.
+				$new_content = preg_replace( $regex, $new_define, $content );
+
 			} else {
-				$line = array_keys( $location )[0];
+
+				// Constant is not defined in wp-config.php.
+				$new_content  = $content;
+				$new_content .= "\n/** Added by WordPress Security Best Practices */\n";
+				$new_content .= $new_define . "\n";
+
 			}
 
-			$content_as_array  = $this->wp_filesystem->get_contents_array( $path . $this->wp_config );
-			$string_to_replace = $content_as_array[ $line ];
-			$new_string        = str_replace( $remove, $add, $string_to_replace );
-			$content_as_string = $this->wp_filesystem->get_contents( $path . $this->wp_config );
-			$new_content       = str_replace( $string_to_replace, $new_string, $content_as_string );
 			return $this->wp_filesystem->put_contents( $path . $this->wp_config, $new_content );
 
 		} else {
@@ -404,60 +419,6 @@ class WP_Security_BP_Files {
 		}
 
 	}
-
-	/**
-	 * Short desc
-	 *
-	 * Long desc
-	 *
-	 * @since    1.0.0
-	 * @param    string $constant    The name of the constant to check.
-	 * @access   private
-	 */
-	private function read_wp_config( $constant = false ) {
-
-		$path = $this->find_wp_config() ? $this->root : $this->parent_root;
-
-		if ( $this->wp_filesystem->is_readable( $path . $this->wp_config ) ) {
-
-			$content   = $this->wp_filesystem->get_contents_array( $path . $this->wp_config );
-			$constants = array();
-
-			foreach ( $content as $line => $value ) {
-				$value        = trim( str_replace( ' ', '', $value ) );
-				$has_define   = strpos( $value, 'define' );
-				$has_constant = $constant ? strpos( $value, $constant ) : true;
-				if ( false !== $has_define && false !== $has_constant ) {
-					$constants[ $line ] = $value;
-				}
-			}
-
-			return $constants;
-
-		} else {
-
-			return false;
-
-		}
-
-	}
-
-	/**
-	 * Short desc
-	 *
-	 * Long desc
-	 *
-	 * @since    1.0.0
-	 * @access   public
-	 */
-	public function define_constants_array() {
-		$this->wp_config_constants = array(
-			'WP_DEBUG'            => false,
-			'DISALLOW_FILE_EDIT'  => true,
-			'WP_AUTO_UPDATE_CORE' => true,
-		);
-	}
-
 
 	/**
 	 * The method that checks if a constant with a certain value is defined or not.
@@ -474,23 +435,6 @@ class WP_Security_BP_Files {
 
 		return defined( $constant ) && constant( $constant ) === $value;
 
-	}
-
-
-	/**
-	 * Short desc
-	 *
-	 * Long desc
-	 *
-	 * @since    1.0.0
-	 * @access   public
-	 */
-	public function check_constants() {
-		$valid = array();
-		foreach ( $this->wp_config_constants as $constant => $value ) {
-			$valid[ $constant ] = $this->check_constant( $constant, $value );
-		};
-		return $valid;
 	}
 
 }
