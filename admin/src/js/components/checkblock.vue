@@ -11,7 +11,7 @@
 				v-show="checkinfo.status === 'fail'" 
 				@click="$emit('fix',checkinfo.action)"
 			>
-			 FIX
+			PUTO
 			</button>
 		</div>
 	<div class="panel">
