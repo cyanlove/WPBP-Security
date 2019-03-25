@@ -31,6 +31,10 @@
 }
 .vm-progress__text{
   font-size: 35px!important;
+  -webkit-animation-timing-function: steps(56);
+}
+.vm-progress-circle__path{
+  transition: stroke-dashoffset 1.2s ease-out 0s, stroke 1.2s ease-in!important;
 }
 /*SECTION CHECKS************************************/
 .section-checks{
@@ -43,6 +47,7 @@
   width: 100%;
   box-sizing: border-box;
   margin: auto;
+  transition: 0.4s;
 }
 .accordion {
   background-color: #eee;
