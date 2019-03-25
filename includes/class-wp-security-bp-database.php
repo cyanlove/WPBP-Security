@@ -72,9 +72,18 @@ class WP_Security_BP_Database {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $domain    Domain to compare with other values.
+	 * @var      string    $domain    Domain of the site to compare with other values.
 	 */
-	private $domain;
+	private $domain_site;
+
+	/**
+	 * The domain of home-site.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $domain    Domain of the home-site to compare with other values.
+	 */
+	private $domain_home;
 
 	/**
 	 * The database name in use.
@@ -121,13 +130,13 @@ class WP_Security_BP_Database {
 	 */
 	public function __construct( $plugin_name, $json ) {
 
-		$this->plugin_name = $plugin_name;
-		//$this->domain = ***
 		global $wpdb;
-		$this->wpdb          = $wpdb;
-		$this->db_name       = $this->wpdb->dbname;
-		$this->db_version    = $this->wpdb->db_version();
-		$this->tables_prefix = $this->wpdb->prefix;
+		$this->db_name       = $wpdb->dbname;
+		$this->db_version    = $wpdb->db_version();
+		$this->tables_prefix = $wpdb->prefix;
+		$this->plugin_name   = $plugin_name;
+		$this->domain_site   = get_site_url();
+		$this->domain_home   = get_home_url();
 		$this->response      = $json;
 	}
 
@@ -142,15 +151,21 @@ class WP_Security_BP_Database {
 		$args['data']       = $this->db_name;
 
 		//push domain to $db_names_blacklist (coming soon)
-		$domain = $this->wpdb->get_var('SELECT option_value FROM wp_options WHERE option_name="home"');
-		array_push(
-			$this->db_names_blacklist,
-			preg_replace( '#^http(s?)?:\/\/|(w{3}\.)?(\.[a-z]{2,3})?#', '', $domain )
+		$domains = preg_replace(
+			'#^http(s?)?:\/\/|(w{3}\.)?(\.[a-z]{2,3})?|-|_#',
+			'',
+			array(
+				$this->domain_site,
+				$this->domain_home,
+			)
 		);
 
 		$check = ! in_array(
 			preg_replace( '#\.|_|-#', '', $this->db_name ),
-			$this->db_names_blacklist
+			array_merge(
+				$this->db_names_blacklist,
+				$domains
+			)
 		);
 
 		if ( $check ) {
