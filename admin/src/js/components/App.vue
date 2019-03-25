@@ -51,6 +51,7 @@ export default{
 			//Get all checks responses in json
 			var params = new URLSearchParams();
 			params.append('action', 'check-all');
+			params.append('nonce', wpsbp.nonce);
 
 			axios.post(ajaxurl, params)
 			.then( response => {
@@ -67,6 +68,7 @@ export default{
 			//Fix action
 			var params = new URLSearchParams();
 			params.append('action', e);
+			params.append('nonce', wpsbp.nonce);
 
 			axios.post(ajaxurl, params)
 			.then( response => {

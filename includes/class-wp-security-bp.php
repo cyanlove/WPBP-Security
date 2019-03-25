@@ -170,6 +170,10 @@ class WP_Security_BP {
 	 */
 	private function define_admin_hooks() {
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		$plugin_admin = new WP_Security_BP_Admin( $this->get_wp_security_bp(), $this->get_version() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
@@ -186,13 +190,17 @@ class WP_Security_BP {
 		 * Register Ajax calls.
 		 * For every Ajax request get the 'action' value sent through POST and register
 		 * the appropiate hook and method.
-		 *
 		 */
 		if ( wp_doing_ajax() ) {
 
-			$action = empty( $_POST['action'] ) ? '' : wp_unslash( $_POST['action'] );
-			$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, 'run_ajax_calls' );
+			$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) ); // PHPCS:ignore
 
+			if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $plugin_admin->nonce ) ) {
+				wp_die();
+			} else {
+				$action = empty( $_POST['action'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['action'] ) );
+				$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, 'run_ajax_calls' );
+			}
 		}
 
 	}
