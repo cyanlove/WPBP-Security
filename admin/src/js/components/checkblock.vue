@@ -16,7 +16,7 @@
 				 Fix
 				</button>
 				<div id="show-icon" >
-					{{ !isOpen ? open : close }}
+					{{ !isOpen ? '+' : '-' }}
 				</div>
 			</div>
 		</div>
@@ -36,8 +36,6 @@ export default{
 	data(){
 		return{
 			isOpen: false,
-			open: '+',
-			close: '-'
 		}
 	},
 	methods:{
