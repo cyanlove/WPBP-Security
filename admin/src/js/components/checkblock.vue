@@ -15,7 +15,7 @@
 				>
 				 Fix
 				</button>
-				<div id="show-icon">
+				<div id="show-icon" >
 					{{ !isOpen ? open : close }}
 				</div>
 			</div>
@@ -47,7 +47,7 @@ export default{
 				return
 			}
 			if ( event.target.id == 'show-icon' ){
-				return
+				var panel = event.target.parentNode.parentNode.nextElementSibling;
 			}
 		    if ( panel.style.display === "block" ) {
 		      panel.style.display = "none";
