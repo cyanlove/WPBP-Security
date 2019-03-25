@@ -38,9 +38,27 @@ class WP_Security_BP_Users {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      string    $users    The array of all users info
+	 * @var      array    $users    The array of all users
 	 */
 	protected $users;
+
+	/**
+	 * Short desc
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $posts    The array of all posts
+	 */
+	protected $posts;
+
+	/**
+	 * Short desc
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $admin_ids    The array of all admin ID
+	 */
+	protected $admin_ids;
 
 	/**
 	 * Short desc
@@ -93,8 +111,10 @@ class WP_Security_BP_Users {
 	public function __construct( $plugin_name, $json ) {
 
 		$this->plugin_name   = $plugin_name;
-		$this->range_scan_id = 10;
+		$this->range_scan_id = 5;
 		$this->users         = get_users();
+		$this->posts         = get_posts();
+		$this->admin_ids     = $this->get_admin_ids();
 		$this->response      = $json;
 
 	}
@@ -104,11 +124,12 @@ class WP_Security_BP_Users {
 		$args['short_desc'] = 'Check admin id';
 		$check              = false;
 
-		foreach ( $this->users as $user ) {
-			if ( $user->ID <= $this->range_scan_id ) {
+		foreach ( $this->admin_ids as $id ) {
+			if ( $id <= $this->range_scan_id ) {
 				$check = true;
 			}
 		}
+
 		if ( true === $check ) {
 				$args['message'] = __( 'You have danger admin ids!', 'wp-security-bp' );
 				$args['action']  = 'users-fix-admin-id';
@@ -138,7 +159,38 @@ class WP_Security_BP_Users {
 				$args['message'] = __( 'Your admin user login are secure!', 'wp-security-bp' );
 				$this->response->pass( $args );
 		}
-
 	}
 
+	public function check_if_admin_is_author() {
+
+		$args['short_desc'] = 'Check if admin is author of posts';
+		$check              = false;
+
+		foreach ( $this->posts as $post ) {
+			if ( in_array( $post->post_author, $this->admin_ids ) ) {
+					$check = true;
+			}
+		}
+		if ( true === $check ) {
+				$args['message'] = __( 'Admin is author of posts. Thats not recomended!', 'wp-security-bp' );
+				$args['action']  = 'users-fix-admin-author';
+				$this->response->fail( $args );
+		} else {
+				$args['message'] = __( 'Admin is not author of posts', 'wp-security-bp' );
+				$this->response->pass( $args );
+		}
+	}
+
+	public function get_admin_ids() {
+
+		$ids = array();
+
+		foreach ( $this->users as $user ) {
+			if ( $user->caps['administrator'] ) {
+				array_push( $ids, $user->ID );
+			}
+		}
+
+		return $ids;
+	}
 }

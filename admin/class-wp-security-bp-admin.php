@@ -189,6 +189,7 @@ class WP_Security_BP_Admin {
 		$users      = new WP_Security_BP_Users( $this->plugin_name, $this->json );
 		$users->check_users_ids();
 		$users->check_admin_name();
+		$users->check_if_admin_is_author();
 		// Class Database checks.
 		$db         = new WP_Security_BP_Database( $this->plugin_name, $this->json );
 		$db->check_name();
