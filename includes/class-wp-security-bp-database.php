@@ -33,6 +33,15 @@ class WP_Security_BP_Database {
 	protected $plugin_name;
 
 	/**
+	 * The object to access database.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      object    $wpdb    Object with preset rules to access database.
+	 */
+	protected $wpdb;
+
+	/**
 	 * The database names blacklist. They shouldn't be used.
 	 *
 	 * @since    1.0.0
@@ -115,9 +124,10 @@ class WP_Security_BP_Database {
 		$this->plugin_name = $plugin_name;
 		//$this->domain = ***
 		global $wpdb;
-		$this->db_name       = $wpdb->dbname;
-		$this->db_version    = $wpdb->db_version();
-		$this->tables_prefix = $wpdb->prefix;
+		$this->wpdb          = $wpdb;
+		$this->db_name       = $this->wpdb->dbname;
+		$this->db_version    = $this->wpdb->db_version();
+		$this->tables_prefix = $this->wpdb->prefix;
 		$this->response      = $json;
 	}
 
@@ -130,14 +140,18 @@ class WP_Security_BP_Database {
 
 		$args['short_desc'] = 'check DB name';
 		$args['data']       = $this->db_name;
-		//push domain to $db_names_blacklist (coming soon)
 
-		/*
-		too simple check for the moment.
-		This will check removing every _ , - , . (at least)
-		and even part of string coincidences.
-		*/
-		$check = ! in_array( $this->db_name, $this->db_names_blacklist );
+		//push domain to $db_names_blacklist (coming soon)
+		$domain = $this->wpdb->get_var('SELECT option_value FROM wp_options WHERE option_name="home"');
+		array_push(
+			$this->db_names_blacklist,
+			preg_replace( '#^http(s?)?:\/\/|(w{3}\.)?(\.[a-z]{2,3})?#', '', $domain )
+		);
+
+		$check = ! in_array(
+			preg_replace( '#\.|_|-#', '', $this->db_name ),
+			$this->db_names_blacklist
+		);
 
 		if ( $check ) {
 			$args['message'] = __( 'Your database name is fine.', 'wp-security-bp' );
