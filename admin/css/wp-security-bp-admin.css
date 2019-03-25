@@ -30,10 +30,7 @@
   margin:auto;
 }
 .vm-progress__text{
-  font-size: 30px!important;
-}
-.vm-progress__circle{
-  transition: 1s ease!important;
+  font-size: 35px!important;
 }
 /*SECTION CHECKS************************************/
 .section-checks{
@@ -114,7 +111,6 @@
   user-select: none;
   color: #808080;
   border: 1px solid #808080;
-  float: right;
   margin-left: 20px;
 }
 #inputs_desc{

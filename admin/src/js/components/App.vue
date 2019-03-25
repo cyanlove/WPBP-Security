@@ -19,12 +19,12 @@
 		<div class="separator"></div>
 		<div class="section-checks">
 			<checkblock 
-			v-for="checkinfo in info" 
-			:checkinfo="checkinfo" 
-			:key="checkinfo.id"
-			@fix="fix"
-		>
-		</checkblock>
+				v-for="checkinfo in info" 
+				:checkinfo="checkinfo" 
+				:key="checkinfo.id"
+				@fix="fix"
+			>
+			</checkblock>
 		</div>
 	</div>
 </template>
@@ -36,7 +36,7 @@ export default{
 	data() {
 		return {
 			info: [],
-			percentage: 69,
+			percentage: '',
 		}
 	},
 	components:{
@@ -55,6 +55,8 @@ export default{
 			axios.post(ajaxurl, params)
 			.then( response => {
 				this.info = response.data;
+				//trigger calculate percentage function
+				this.calc_per()
 				console.log(this.info)
 			})
 			.catch( error => {
@@ -69,12 +71,20 @@ export default{
 			axios.post(ajaxurl, params)
 			.then( response => {
 				this.info = response.data;
+				//trigger calculate percentage function
+				this.calc_per()
 				console.log(this.info)
 			})
 			.catch( error => {
 				console.log(error);
 			});
 		},
+		calc_per(){
+			/*calculate percentage of passed checks*/
+			const map_info_status = this.info.map( x => x.status )
+			const count_pass      = map_info_status.filter( pass => pass === 'pass')
+			this.percentage       = Math.round( 100 / map_info_status.length ) * count_pass.length
+		}
 	}
 }
 </script> 
