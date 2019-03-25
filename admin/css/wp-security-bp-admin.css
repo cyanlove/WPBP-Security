@@ -3,23 +3,63 @@
  * included in this file.
  */
 
- #checkblock{
+/*CONTAINER & GLOBALS*********************************/
+*{
+  margin:0;
+  padding: 0;
+}
+.container{
+  width: 100%;
+  margin: auto;
+}
+/*HEADER*********************************************/
+.header{
+  width: 98%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #808080;
+  margin: auto;
+}
+/*SECTION PROGRESS**********************************/
+.section-progress{
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+  margin:auto;
+}
+.vm-progress__text{
+  font-size: 35px!important;
+}
+.vm-progress-circle__path{
+  transition: stroke-dashoffset 1.2s ease-out 0s, stroke 1.2s ease-in!important;
+}
+/*SECTION CHECKS************************************/
+.section-checks{
+  border: 1px solid #808080;
+  padding: 20px;
   width: 80%;
+  margin: auto;
+}
+ #checkblock{
+  width: 100%;
   box-sizing: border-box;
+  margin: auto;
+  transition: 0.4s;
 }
 .accordion {
   background-color: #eee;
   color: #1A1A1A;
   padding: 10px;
   cursor: pointer;
-  width: 100%;
+  border: 1px solid #808080;
   height: 30px;
   transition: 0.4s;
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: bold;
 }
 #fix{
  border: none;
@@ -30,23 +70,62 @@
  background: #ECE9E9;
  cursor: pointer;
 }
-.failed{
-	background: #E81919;
+.fail{
+  background-image: #FFA0A0;  /* fallback for old browsers */
+  background-image: -webkit-linear-gradient(to left, #b20a2c, #FFA0A0);  /* Chrome 10-25, Safari 5.1-6 */
+  background-image: linear-gradient(to left, #b20a2c, #FFA0A0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
 }
-.failed:hover {
-  background: #FF0101
+.fail:hover {
+  background-image: #E59494;
+  background-image: -webkit-linear-gradient(to left, #970926, #E59494);
+  background-image: linear-gradient(to left, #970926, #E59494);
+
 }
-.passed{
-	background: #27DB6B;
+.pass{
+  background-image: #1D976C;
+  background-image: -webkit-linear-gradient(to right, #93F9B9, #1D976C);
+  background-image: linear-gradient(to right, #93F9B9, #1D976C);
 }
-.passed:hover {
-  background: #42F384;
+.pass:hover {
+  background-image: #177755;
+  background-image: -webkit-linear-gradient(to right, #8EEEB2, #177755);
+  background-image: linear-gradient(to right, #8EEEB2, #177755);
+
 }
 .panel {
   display: none;
-  background-color: #C3C2C2;
+  background-color: #E9E9E9;
   overflow: hidden;
   transition: 0.4s;
-  width: 100%;
   padding: 10px;
+  border: 1px solid #808080;
+  border-top: 0px;
+}
+
+#show-icon{
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #E9E9E9;
+  font-size: 20px;
+  text-align: center;
+  line-height: 10px;
+  transition: 0.5s;
+  user-select: none;
+  color: #808080;
+  border: 1px solid #808080;
+  margin-left: 20px;
+}
+#inputs_desc{
+  display: flex;
+  align-items: center;
+}
+
+/*SEPARATORS**************************************/
+.separator{
+  width: 1px;
+  background: #808080;
+  height: 50px;
+  margin: auto;
 }

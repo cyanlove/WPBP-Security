@@ -12,8 +12,7 @@
  */
 
 ?>
-<h1>WordPress Security Best Practices</h1>
 <div id="app">
-</div>
+
 
 
