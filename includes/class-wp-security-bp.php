@@ -193,12 +193,14 @@ class WP_Security_BP {
 		 */
 		if ( wp_doing_ajax() ) {
 
-			$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) ); // PHPCS:ignore
-
-			if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $plugin_admin->nonce ) ) {
-				wp_die();
-			} else {
-				$action = empty( $_POST['action'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['action'] ) );
+			if (
+				isset( $_POST['action'], $_POST['nonce'] )
+				&& wp_verify_nonce(
+					sanitize_key( $_POST['nonce'] ),
+					$plugin_admin->nonce
+				)
+			) {
+				$action = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 				$this->loader->add_action( 'wp_ajax_' . $action, $plugin_admin, 'run_ajax_calls' );
 			}
 		}

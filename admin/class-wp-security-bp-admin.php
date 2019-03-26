@@ -218,13 +218,14 @@ class WP_Security_BP_Admin {
 	public function run_ajax_calls() {
 		if ( current_user_can( 'manage_options' ) && wp_doing_ajax() ) {
 
-			$nonce = sanitize_text_field( wp_unslash( $_POST['nonce'] ) ); // PHPCS:ignore
-
-			if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $this->nonce ) ) {
-				wp_die();
-			} else {
-
-				$action = empty( $_POST['action'] ) ? '' : sanitize_text_field( wp_unslash( $_POST['action'] ) );
+			if (
+				isset( $_POST['action'], $_POST['nonce'] )
+				&& wp_verify_nonce(
+					sanitize_key( $_POST['nonce'] ),
+					$this->nonce
+				)
+			) {
+				$action = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 
 				if ( 'check-all' === $action ) {
 					$this->check_all();
@@ -264,15 +265,12 @@ class WP_Security_BP_Admin {
 					}
 					$class->$method();
 					$this->check_all();
-				} else {
-					// @todo This should be checked before release.
-					wp_die( 'This action does not exist motherfucker!!' );
 				}
 			}
-		} else {
-			wp_die(); // current_user_can & wp_doing_ajax verification.
 		}
+		wp_die();
 	}
+
 	/**
 	 * Render the settings page for this plugin.
 	 *
