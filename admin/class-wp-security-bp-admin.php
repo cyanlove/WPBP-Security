@@ -49,6 +49,15 @@ class WP_Security_BP_Admin {
 	private $admin_url;
 
 	/**
+	 * The url of the plugin
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $nonce    The the action nonce.
+	 */
+	public $nonce;
+
+	/**
 	 * The hook suffix
 	 *
 	 * @since    1.0.0
@@ -79,7 +88,8 @@ class WP_Security_BP_Admin {
 
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
-		$this->admin_url   = admin_url( 'options-general.php?page=' . $this->plugin_name );
+		$this->admin_url   = admin_url( 'tools.php?page=' . $this->plugin_name ); // @todo replace hardcoded value.
+		$this->nonce       = 'wp-security-bp-admin-nonce';
 		$this->json        = new WP_Security_BP_JSON();
 	}
 
@@ -129,6 +139,10 @@ class WP_Security_BP_Admin {
 		 */
 		if ( $hook_suffix === $this->hook_suffix ) {
 			wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-security-bp-admin.min.js', array(), $this->version, true );
+			$args = array(
+				'nonce' => wp_create_nonce( $this->nonce ),
+			);
+			wp_localize_script( $this->plugin_name, 'wpsbp', $args );
 		}
 
 	}
@@ -147,7 +161,7 @@ class WP_Security_BP_Admin {
 		* Administration Menus: http://codex.wordpress.org/Administration_Menus
 		*
 		*/
-		$this->hook_suffix = add_options_page(
+		$this->hook_suffix = add_management_page(
 			'WordPress Security Best Practices Dashboard',
 			'WP Security BP',
 			'manage_options',
@@ -167,7 +181,7 @@ class WP_Security_BP_Admin {
 		 * Documentation : https://codex.wordpress.org/Plugin_API/Filter_Reference/plugin_action_links_(plugin_file_name)
 		 */
 		$settings_link = array(
-			'<a href="' . $this->admin_url . '">' . sprintf( __( 'Settings', '%s' ), $this->plugin_name ) . '</a>',
+			'<a href="' . $this->admin_url . '">' . sprintf( __( 'Check your site', '%s' ), $this->plugin_name ) . '</a>',
 		);
 		return array_merge( $settings_link, $links );
 
@@ -202,57 +216,61 @@ class WP_Security_BP_Admin {
 	 * @since    1.0.0
 	 */
 	public function run_ajax_calls() {
-		if ( wp_doing_ajax() ) {
+		if ( current_user_can( 'manage_options' ) && wp_doing_ajax() ) {
 
-			$action = empty( $_POST['action'] ) ? '' : wp_unslash( $_POST['action'] );
+			if (
+				isset( $_POST['action'], $_POST['nonce'] )
+				&& wp_verify_nonce(
+					sanitize_key( $_POST['nonce'] ),
+					$this->nonce
+				)
+			) {
+				$action = sanitize_text_field( wp_unslash( $_POST['action'] ) );
 
-			if ( 'check-all' === $action ) {
-				$this->check_all();
-			}
-
-			/**
-			 * This array matches the 'action' value sent with the ajax request with the
-			 * corresponding method that should be fired.
-			 *
-			 * The key is the action passed from JS. All action names must include the exact
-			 * name of the class that should be fired followed by a hyphen '-' and some identitiy name.
-			 *
-			 * The value is the method name and must be exact excluding the brackets '()'.
-			 */
-			$actions = array(
-				'class-example-action'   => 'example_class_method', // for example purpose only.
-				'files-fix-wp-config'    => 'fix_wp_config',
-				'files-fix-debug'        => 'fix_debug',
-				'files-fix-file-edit'    => 'fix_file_edit',
-				'files-fix-auto-updates' => 'fix_auto_updates',
-			);
-			if ( array_key_exists( $action, $actions ) ) {
-				$key    = strstr( $action, '-', true );
-				$method = $actions[ $action ];
-				switch ( $key ) {
-					case 'files':
-						$class = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url, $this->json );
-						break;
-					case 'users':
-						$class = new WP_Security_BP_Users( $this->plugin_name, $this->json );
-						break;
-					case 'database':
-						$class = new WP_Security_BP_Database( $this->plugin_name, $this->json );
-						break;
-					default:
-						wp_die();
+				if ( 'check-all' === $action ) {
+					$this->check_all();
 				}
 
-				$class->$method();
-				$this->check_all();
-
-			} else {
-				// This should be checked before release.
-				$this->check_all();
+				/**
+				 * This array matches the 'action' value sent with the ajax request with the
+				 * corresponding method that should be fired.
+				 *
+				 * The key is the action passed from JS. All action names must include the exact
+				 * name of the class that should be fired followed by a hyphen '-' and some identitiy name.
+				 *
+				 * The value is the method name and must be exact excluding the brackets '()'.
+				 */
+				$actions = array(
+					'class-example-action'   => 'example_class_method', // for example purpose only.
+					'files-fix-wp-config'    => 'fix_wp_config',
+					'files-fix-debug'        => 'fix_debug',
+					'files-fix-file-edit'    => 'fix_file_edit',
+					'files-fix-auto-updates' => 'fix_auto_updates',
+				);
+				if ( array_key_exists( $action, $actions ) ) {
+					$key    = strstr( $action, '-', true );
+					$method = $actions[ $action ];
+					switch ( $key ) {
+						case 'files':
+							$class = new WP_Security_BP_Files( $this->plugin_name, $this->admin_url, $this->json );
+							break;
+						case 'users':
+							$class = new WP_Security_BP_Users( $this->plugin_name, $this->json );
+							break;
+						case 'database':
+							$class = new WP_Security_BP_Database( $this->plugin_name, $this->json );
+							break;
+						default:
+							wp_die();
+					}
+					$class->$method();
+					$this->check_all();
+				}
 			}
 		}
-
+		wp_die();
 	}
+
 	/**
 	 * Render the settings page for this plugin.
 	 *
