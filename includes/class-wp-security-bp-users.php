@@ -47,24 +47,6 @@ class WP_Security_BP_Users {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      array    $posts    The array of all posts
-	 */
-	protected $posts;
-
-	/**
-	 * Short desc
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      array    $admin_ids    The array of all admin ID
-	 */
-	protected $admin_ids;
-
-	/**
-	 * Short desc
-	 *
-	 * @since    1.0.0
-	 * @access   protected
 	 * @var      integer    $range_scan_id  The integer to set the range to scan of users id's.
 	 */
 	protected $range_scan_id;
@@ -113,84 +95,112 @@ class WP_Security_BP_Users {
 		$this->plugin_name   = $plugin_name;
 		$this->range_scan_id = 5;
 		$this->users         = get_users();
-		$this->posts         = get_posts();
-		$this->admin_ids     = $this->get_admin_ids();
 		$this->response      = $json;
 
 	}
 
+	/**
+	 *
+	 *
+	 * Check if user admins id are in the range of dangerous id's
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+
 	public function check_users_ids() {
-
-		$args['short_desc'] = 'Check admin id';
+		//init vars
 		$check              = false;
-
-		foreach ( $this->admin_ids as $id ) {
-			if ( $id <= $this->range_scan_id ) {
+		$args['short_desc'] = 'Check admin id';
+		//check
+		foreach ( $this->users as $user ) {
+			if ( $user->caps['administrator'] && $user->ID <= $this->range_scan_id ) {
 				$check = true;
 			}
 		}
-
+		//response
 		if ( true === $check ) {
+
 				$args['message'] = __( 'You have danger admin ids!', 'wp-security-bp' );
 				$args['action']  = 'users-fix-admin-id';
 				$this->response->fail( $args );
+
 		} else {
+
 				$args['message'] = __( 'Your admin ids are secure!', 'wp-security-bp' );
 				$this->response->pass( $args );
-		}
 
+		}
 	}
 
+	/**
+	 *
+	 *
+	 * Check if admins login name are in the blacklist
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
+
 	public function check_admin_name() {
-
-		$args['short_desc'] = 'Check admin user login';
+		//init vars
 		$check              = false;
-
+		$args['short_desc'] = 'Check admin user login';
+		//check
 		foreach ( $this->users as $user ) {
-			if ( $user->caps['administrator'] && in_array( $user->user_login, $this->blacklists_admin_names, true ) ) {
+			if ( $user->caps['administrator'] && in_array( $user->user_login, $this->blacklists_admin_names ) ) {
 					$check = true;
 			}
 		}
+		//response
 		if ( true === $check ) {
+
 				$args['message'] = __( 'You have danger admin user login!', 'wp-security-bp' );
 				$args['action']  = 'users-fix-admin-login';
 				$this->response->fail( $args );
+
 		} else {
+
 				$args['message'] = __( 'Your admin user login are secure!', 'wp-security-bp' );
 				$this->response->pass( $args );
+
 		}
 	}
+
+	/**
+	 *
+	 *
+	 * Check if admins are authors of any post
+	 *
+	 * @since    1.0.0
+	 * @access   public
+	 */
 
 	public function check_if_admin_is_author() {
-
-		$args['short_desc'] = 'Check if admin is author of posts';
+		//init vars
+		global $wpdb;
 		$check              = false;
-
-		foreach ( $this->posts as $post ) {
-			if ( in_array( $post->post_author, $this->admin_ids ) ) {
-					$check = true;
+		$args['short_desc'] = 'Check if admin is author of posts';
+		$query              = $wpdb->get_results( 'SELECT post_author FROM wp_posts' );
+		$id_post_authors    = wp_list_pluck( $query, 'post_author' );
+		//check
+		foreach ( $this->users as $user ) {
+			if ( $user->caps['administrator'] && in_array( $user->ID, $id_post_authors ) ) {
+				$check = true;
 			}
 		}
+		//response
 		if ( true === $check ) {
-				$args['message'] = __( 'Admin is author of posts. Thats not recomended!', 'wp-security-bp' );
+
+				$args['message'] = __( 'Admin has posts. Thats not recomended man...', 'wp-security-bp' );
 				$args['action']  = 'users-fix-admin-author';
 				$this->response->fail( $args );
+
 		} else {
-				$args['message'] = __( 'Admin is not author of posts', 'wp-security-bp' );
+
+				$args['message'] = __( 'Admin is not author of posts. Good!', 'wp-security-bp' );
 				$this->response->pass( $args );
+
 		}
-	}
-
-	public function get_admin_ids() {
-
-		$ids = array();
-
-		foreach ( $this->users as $user ) {
-			if ( $user->caps['administrator'] ) {
-				array_push( $ids, $user->ID );
-			}
-		}
-
-		return $ids;
 	}
 }
