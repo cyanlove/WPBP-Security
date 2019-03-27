@@ -86,12 +86,16 @@ class WP_Security_BP_Users {
 		$this->plugin_name  = $plugin_name;
 		$this->response     = $json;
 		$this->default_args = array(
-			'fields'      => array(
+
+			'fields'   => array(
 				'ID',
 				'display_name',
 				'user_login',
 			),
-			'count_total' => false,
+			'role__in' => array(
+				'Super Admin',
+				'Administrator',
+			),
 		);
 	}
 
@@ -109,15 +113,12 @@ class WP_Security_BP_Users {
 		$args['short_desc'] = 'Check admin id';
 		//check:
 		$search = array(
-			'role__in' => array(
-				'Super Admin',
-				'Administrator',
-			),
-			'include'  => range(1, 10),
+
+			'include' => range( 1, 10 ),
+
 		);
-		$params = array_merge( $this->default_args, $search);
-		$query = new WP_User_Query( $params );
-		$check = $query->get_results();
+		$params = array_merge( $this->default_args, $search );
+		$check = get_users( $params );
 		//response:
 		if ( ! empty( $check ) ) {
 
@@ -147,13 +148,11 @@ class WP_Security_BP_Users {
 		$args['short_desc'] = 'Check admin user login';
 		//check:
 		$search = array(
-			'role__in'  => array(
-				'Super Admin',
-				'Administrator',
-			),
+
 			'login__in' => $this->blacklists_admin_names,
+
 		);
-		$params = array_merge( $this->default_args, $search);
+		$params = array_merge( $this->default_args, $search );
 		$check = get_users( $params );
 		//response:
 		if ( ! empty( $check ) ) {
@@ -183,13 +182,11 @@ class WP_Security_BP_Users {
 		$args['short_desc'] = 'Check if admin is author of posts';
 		//check:
 		$search = array(
-			'role__in'            => array(
-				'Super Admin',
-				'Administrator',
-			),
+
 			'has_published_posts' => true,
+
 		);
-		$params = array_merge( $this->default_args, $search);
+		$params = array_merge( $this->default_args, $search );
 		$check = get_users( $params );
 		//response:
 		if ( ! empty( $check ) ) {
