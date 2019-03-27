@@ -86,7 +86,6 @@ class WP_Security_BP_Users {
 		$this->plugin_name  = $plugin_name;
 		$this->response     = $json;
 		$this->default_args = array(
-
 			'fields'   => array(
 				'ID',
 				'display_name',
