@@ -113,7 +113,7 @@ class WP_Security_BP_Users {
 				'Super Admin',
 				'Administrator',
 			),
-			'include'  => range(1, 2),
+			'include'  => range(1, 10),
 		);
 		$params = array_merge( $this->default_args, $search);
 		$query = new WP_User_Query( $params );
@@ -187,7 +187,7 @@ class WP_Security_BP_Users {
 				'Super Admin',
 				'Administrator',
 			),
-			'has_published_posts' => false,
+			'has_published_posts' => true,
 		);
 		$params = array_merge( $this->default_args, $search);
 		$check = get_users( $params );
