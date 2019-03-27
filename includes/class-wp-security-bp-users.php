@@ -38,24 +38,6 @@ class WP_Security_BP_Users {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      array    $users    The array of all users
-	 */
-	protected $users;
-
-	/**
-	 * Short desc
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      integer    $range_scan_id  The integer to set the range to scan of users id's.
-	 */
-	protected $range_scan_id;
-
-	/**
-	 * Short desc
-	 *
-	 * @since    1.0.0
-	 * @access   protected
 	 * @var      array    $blacklists_admin_names  The array with blacklist admin login names.
 	 */
 
@@ -72,6 +54,15 @@ class WP_Security_BP_Users {
 		'sql',
 		'pos',
 	);
+
+	/**
+	 * Short desc
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $default_args    The array that contains the default arguments to pass to get_users()
+	 */
+	protected $default_args;
 
 	/**
 	 * The final attribute to return in each public function.
@@ -92,11 +83,16 @@ class WP_Security_BP_Users {
 
 	public function __construct( $plugin_name, $json ) {
 
-		$this->plugin_name   = $plugin_name;
-		$this->range_scan_id = 5;
-		$this->users         = get_users();
-		$this->response      = $json;
-
+		$this->plugin_name  = $plugin_name;
+		$this->response     = $json;
+		$this->default_args = array(
+			'fields'      => array(
+				'ID',
+				'display_name',
+				'user_login',
+			),
+			'count_total' => false,
+		);
 	}
 
 	/**
@@ -109,26 +105,30 @@ class WP_Security_BP_Users {
 	 */
 
 	public function check_users_ids() {
-		//init vars
-		$check              = false;
+		//short description:
 		$args['short_desc'] = 'Check admin id';
-		//check
-		foreach ( $this->users as $user ) {
-			if ( $user->caps['administrator'] && $user->ID <= $this->range_scan_id ) {
-				$check = true;
-			}
-		}
-		//response
-		if ( true === $check ) {
+		//check:
+		$check = get_users(
+			$this->default_args,
+			array(
+				'role__in' => array(
+					'Super Admin',
+					'Administrator',
+				),
+				'include'  => range( 1, 10 ),
+			)
+		);
+		//response:
+		if ( ! empty( $check ) ) {
 
-				$args['message'] = __( 'You have danger admin ids!', 'wp-security-bp' );
-				$args['action']  = 'users-fix-admin-id';
-				$this->response->fail( $args );
+			$args['message'] = __( 'You have danger admin ids!', 'wp-security-bp' );
+			$args['action']  = 'users-fix-admin-id';
+			$this->response->fail( $args );
 
 		} else {
 
-				$args['message'] = __( 'Your admin ids are secure!', 'wp-security-bp' );
-				$this->response->pass( $args );
+			$args['message'] = __( 'Your admin ids are secure!', 'wp-security-bp' );
+			$this->response->pass( $args );
 
 		}
 	}
@@ -136,33 +136,36 @@ class WP_Security_BP_Users {
 	/**
 	 *
 	 *
-	 * Check if admins login name are in the blacklist
+	 * Check if admin login name is in the blacklist
 	 *
 	 * @since    1.0.0
 	 * @access   public
 	 */
 
 	public function check_admin_name() {
-		//init vars
-		$check              = false;
+		//short description:
 		$args['short_desc'] = 'Check admin user login';
-		//check
-		foreach ( $this->users as $user ) {
-			if ( $user->caps['administrator'] && in_array( $user->user_login, $this->blacklists_admin_names ) ) {
-					$check = true;
-			}
-		}
-		//response
-		if ( true === $check ) {
+		//check:
+		$check = get_users(
+			$this->default_args,
+			array(
+				'role__in'  => array(
+					'Super Admin',
+					'Administrator',
+				),
+				'login__in' => $this->blacklists_admin_names,
+			)
+		);
+		//response:
+		if ( ! empty( $check ) ) {
 
-				$args['message'] = __( 'You have danger admin user login!', 'wp-security-bp' );
-				$args['action']  = 'users-fix-admin-login';
-				$this->response->fail( $args );
+			$args['message'] = __( 'You have danger admin user login!', 'wp-security-bp' );
+			$this->response->fail( $args );
 
 		} else {
 
-				$args['message'] = __( 'Your admin user login are secure!', 'wp-security-bp' );
-				$this->response->pass( $args );
+			$args['message'] = __( 'Your admin user login are secure!', 'wp-security-bp' );
+			$this->response->pass( $args );
 
 		}
 	}
@@ -177,30 +180,32 @@ class WP_Security_BP_Users {
 	 */
 
 	public function check_if_admin_is_author() {
-		//init vars
-		global $wpdb;
-		$check              = false;
+		//short description:
 		$args['short_desc'] = 'Check if admin is author of posts';
-		$query              = $wpdb->get_results( 'SELECT post_author FROM wp_posts' );
-		$id_post_authors    = wp_list_pluck( $query, 'post_author' );
-		//check
-		foreach ( $this->users as $user ) {
-			if ( $user->caps['administrator'] && in_array( $user->ID, $id_post_authors ) ) {
-				$check = true;
-			}
-		}
-		//response
-		if ( true === $check ) {
+		//check:
+		$check = get_users(
+			$this->default_args,
+			array(
+				'role__in'            => array(
+					'Super Admin',
+					'Administrator',
+				),
+				'has_published_posts' => true,
+			)
+		);
+		//response:
+		if ( ! empty( $check ) ) {
 
-				$args['message'] = __( 'Admin has posts. Thats not recomended man...', 'wp-security-bp' );
-				$args['action']  = 'users-fix-admin-author';
-				$this->response->fail( $args );
+			$args['message'] = __( 'Admin has posts. Thats not recomended man...', 'wp-security-bp' );
+			$args['action']  = 'users-fix-admin-author';
+			$this->response->fail( $args );
 
 		} else {
 
-				$args['message'] = __( 'Admin is not author of posts. Good!', 'wp-security-bp' );
-				$this->response->pass( $args );
+			$args['message'] = __( 'Admin is not author of posts. Good!', 'wp-security-bp' );
+			$this->response->pass( $args );
 
 		}
 	}
 }
+
