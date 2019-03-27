@@ -79,4 +79,4 @@ function run_wp_security_bp() {
 	$plugin->run();
 
 }
-run_wp_security_bp();
+add_action( 'plugins_loaded', 'run_wp_security_bp' );
