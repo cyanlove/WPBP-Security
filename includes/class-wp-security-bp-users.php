@@ -108,16 +108,15 @@ class WP_Security_BP_Users {
 		//short description:
 		$args['short_desc'] = 'Check admin id';
 		//check:
-		$check = get_users(
-			$this->default_args,
-			array(
-				'role__in' => array(
-					'Super Admin',
-					'Administrator',
-				),
-				'include'  => range( 1, 10 ),
-			)
+		$params = array(
+			'role__in' => array(
+				'Super Admin',
+				'Administrator',
+			),
+			'include'  => range( 1, 10 ),
 		);
+		$query = new WP_User_Query( $this->default_args, $params );
+		$check = $query->get_results();
 		//response:
 		if ( ! empty( $check ) ) {
 
