@@ -57,7 +57,7 @@ export default{
 			.then( response => {
 				this.info = response.data;
 				//trigger calculate percentage function
-				this.calc_per()
+				this.calc_percentage()
 				console.log(this.info)
 			})
 			.catch( error => {
@@ -74,18 +74,18 @@ export default{
 			.then( response => {
 				this.info = response.data;
 				//trigger calculate percentage function
-				this.calc_per()
+				this.calc_percentage()
 				console.log(this.info)
 			})
 			.catch( error => {
 				console.log(error);
 			});
 		},
-		calc_per(){
+		calc_percentage(){
 			/*calculate percentage of passed checks*/
 			const map_info_status = this.info.map( x => x.status )
 			const count_pass      = map_info_status.filter( pass => pass === 'pass')
-			this.percentage       = Math.round( 100 / map_info_status.length ) * count_pass.length
+			this.percentage       = Math.round(( 100 / map_info_status.length ) * count_pass.length)
 		}
 	}
 }
