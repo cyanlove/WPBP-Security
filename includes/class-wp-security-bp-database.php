@@ -136,7 +136,6 @@ class WP_Security_BP_Database {
 		$this->tables_prefix = $wpdb->prefix;
 		$this->plugin_name   = $plugin_name;
 		$this->domain_site   = get_site_url();
-		$this->domain_home   = get_home_url();
 		$this->response      = $json;
 	}
 
@@ -150,23 +149,32 @@ class WP_Security_BP_Database {
 		$args['short_desc'] = 'check DB name';
 		$args['data']       = $this->db_name;
 
-		//push domain to $db_names_blacklist (coming soon)
-		$domains = preg_replace(
-			'#^http(s?)?:\/\/|(w{3}\.)?(\.[a-z]{2,3})?|-|_#',
-			'',
-			array(
-				$this->domain_site,
-				$this->domain_home,
-			)
-		);
+		if ( ! empty( $this->domain_site ) ) {
+			//clean domain
+			$add_blacklist = preg_replace(
+				'#^http(s?):\/\/|(w{3}\.)|(\.[a-z]{2,4}$)|-|_#',
+				'',
+				$this->domain_site
+			);
 
-		$check = ! in_array(
-			preg_replace( '#\.|_|-#', '', $this->db_name ),
-			array_merge(
-				$this->db_names_blacklist,
-				$domains
-			)
-		);
+			//split by '.' and '/'
+			$add_blacklist = preg_split(
+				'#/|\.#',
+				$add_blacklist
+			);
+
+			$check = ! in_array(
+				preg_replace( '#\.|_|-#', '', $this->db_name ),
+				array_merge(
+					$this->db_names_blacklist,
+					$add_blacklist
+				),
+				true
+			);
+		} else {
+			//if access crazyly comes from outsite domain
+			wp_die();
+		}
 
 		if ( $check ) {
 			$args['message'] = __( 'Your database name is fine.', 'wp-security-bp' );
