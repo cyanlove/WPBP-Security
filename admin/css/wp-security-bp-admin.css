@@ -19,7 +19,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #808080;
+  border-bottom: 1px solid #ccc;
   margin: auto;
 }
 /*SECTION PROGRESS**********************************/
@@ -28,6 +28,7 @@
   width: 200px;
   border-radius: 50%;
   margin:auto;
+
 }
 .vm-progress__text{
   font-size: 35px!important;
@@ -37,95 +38,16 @@
 }
 /*SECTION CHECKS************************************/
 .section-checks{
-  border: 1px solid #808080;
+  border: 1px solid #ccc;
   padding: 20px;
   width: 80%;
   margin: auto;
+  background: #fff;
 }
- #checkblock{
-  width: 100%;
-  box-sizing: border-box;
-  margin: auto;
-  transition: 0.4s;
-}
-.accordion {
-  background-color: #eee;
-  color: #1A1A1A;
-  padding: 10px;
-  cursor: pointer;
-  border: 1px solid #808080;
-  height: 30px;
-  transition: 0.4s;
-  margin-top: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-#fix{
- border: none;
- outline: none;
- padding: 4px;
- width: 100px;
- justify-content: center;
- background: #ECE9E9;
- cursor: pointer;
-}
-.fail{
-  background-image: #FFA0A0;  /* fallback for old browsers */
-  background-image: -webkit-linear-gradient(to left, #b20a2c, #FFA0A0);  /* Chrome 10-25, Safari 5.1-6 */
-  background-image: linear-gradient(to left, #b20a2c, #FFA0A0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-}
-.fail:hover {
-  background-image: #E59494;
-  background-image: -webkit-linear-gradient(to left, #970926, #E59494);
-  background-image: linear-gradient(to left, #970926, #E59494);
-
-}
-.pass{
-  background-image: #1D976C;
-  background-image: -webkit-linear-gradient(to right, #93F9B9, #1D976C);
-  background-image: linear-gradient(to right, #93F9B9, #1D976C);
-}
-.pass:hover {
-  background-image: #177755;
-  background-image: -webkit-linear-gradient(to right, #8EEEB2, #177755);
-  background-image: linear-gradient(to right, #8EEEB2, #177755);
-
-}
-.panel {
-  display: none;
-  background-color: #E9E9E9;
-  overflow: hidden;
-  transition: 0.4s;
-  padding: 10px;
-  border: 1px solid #808080;
-  border-top: 0px;
-}
-
-#show-icon{
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: #E9E9E9;
-  font-size: 20px;
-  text-align: center;
-  line-height: 10px;
-  transition: 0.5s;
-  user-select: none;
-  color: #808080;
-  border: 1px solid #808080;
-  margin-left: 20px;
-}
-#inputs_desc{
-  display: flex;
-  align-items: center;
-}
-
 /*SEPARATORS**************************************/
 .separator{
   width: 1px;
-  background: #808080;
+  background: #ccc;
   height: 50px;
   margin: auto;
 }
