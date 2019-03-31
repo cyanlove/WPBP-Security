@@ -128,7 +128,7 @@ class WP_Security_BP_Database {
 		$this->plugin_name   = $plugin_name;
 		$this->response      = $json;
 		$this->domain_site   = get_site_url();
-		$this->domain_site   = empty( $this->domain_site ) ? wp_die() : $this->domain_site;
+		$this->domain_site   = ( $this->domain_site ) ? wp_die() : $this->domain_site;
 	}
 
 	/**
