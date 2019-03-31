@@ -77,15 +77,6 @@ class WP_Security_BP_Database {
 	private $domain_site;
 
 	/**
-	 * The domain of home-site.
-	 *
-	 * @since    1.0.0
-	 * @access   protected
-	 * @var      string    $domain    Domain of the home-site to compare with other values.
-	 */
-	private $domain_home;
-
-	/**
 	 * The database name in use.
 	 *
 	 * @since    1.0.0
@@ -135,8 +126,9 @@ class WP_Security_BP_Database {
 		$this->db_version    = $wpdb->db_version();
 		$this->tables_prefix = $wpdb->prefix;
 		$this->plugin_name   = $plugin_name;
-		$this->domain_site   = get_site_url();
 		$this->response      = $json;
+		$this->domain_site   = get_site_url();
+		$this->domain_site   = empty( $this->domain_site ) ? wp_die() : $this->domain_site;
 	}
 
 	/**
@@ -149,32 +141,27 @@ class WP_Security_BP_Database {
 		$args['short_desc'] = 'check DB name';
 		$args['data']       = $this->db_name;
 
-		if ( ! empty( $this->domain_site ) ) {
-			//clean domain
-			$add_blacklist = preg_replace(
-				'#^http(s?):\/\/|(w{3}\.)|(\.[a-z]{2,4}$)|-|_#',
-				'',
-				$this->domain_site
-			);
+		//clean domain
+		$add_blacklist = preg_replace(
+			'#^http(s?):\/\/|(w{3}\.)|(\.[a-z]{2,4}$)|-|_#',
+			'',
+			$this->domain_site
+		);
 
-			//split by '.' and '/'
-			$add_blacklist = preg_split(
-				'#/|\.#',
+		//split by '.' and '/'
+		$add_blacklist = preg_split(
+			'#/|\.#',
+			$add_blacklist
+		);
+
+		$check = ! in_array(
+			preg_replace( '#\.|_|-#', '', $this->db_name ),
+			array_merge(
+				$this->db_names_blacklist,
 				$add_blacklist
-			);
-
-			$check = ! in_array(
-				preg_replace( '#\.|_|-#', '', $this->db_name ),
-				array_merge(
-					$this->db_names_blacklist,
-					$add_blacklist
-				),
-				true
-			);
-		} else {
-			//if access crazyly comes from outsite domain
-			wp_die();
-		}
+			),
+			true
+		);
 
 		if ( $check ) {
 			$args['message'] = __( 'Your database name is fine.', 'wp-security-bp' );
