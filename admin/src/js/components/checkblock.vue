@@ -1,29 +1,42 @@
 <template>
-	<div id="checkblock">
-		<div 
-			class="accordion"
-			v-bind:class="checkinfo.status"  	
-			@click="togAccordeon"
-		>	
-			{{ checkinfo.short_desc }} 	
-
-			<div id="inputs_desc">
-				<button 
+	<nav class="notice" 
+		:class="[checkinfo.status === 'fail' ? 'notice-error'   : '', 
+				 checkinfo.status === 'pass' ? 'notice-success' : '',
+				 checkinfo.status !== 'pass' && 'fail' ? 'notice-warning' : '']" 
+		>
+	    <input 
+		  	class ="activate" 
+		  	type  ="checkbox" 
+		  	:id   ="'accordion-' + key" 
+		  	:name ="'accordion-' + key"
+		  	@click="arrowRotate"
+	  	>
+	    <label 
+			:for  ="'accordion-' + key" 
+			class ="menu-title"
+	    >
+		  	<div class="nav-left">
+		  		<div id="short-desc">
+		  			<span>{{ checkinfo.short_desc }}</span>
+		  		</div>
+		  	</div>
+		  	<div class="nav-right">
+		  		<button 
 					id="fix" 
+					class="button" 
 					v-show="checkinfo.action" 
 					@click="$emit('fix',checkinfo.action)"
-				>
-				 Fix
+				>Fix
 				</button>
-				<div id="show-icon" >
-					{{ !isOpen ? '+' : '-' }}
-				</div>
-			</div>
-		</div>
-		<div class="panel">
-			<p><strong>Message:</strong> {{ checkinfo.message }}</p>
-		</div>
-	</div>
+				<span class="dashicons dashicons-arrow-down" id="arrow"></span>
+		  	</div>	
+	    </label>
+	    <div class="drop-down">
+	  		<div class="drop-down-content">
+	  			<span><strong>Message: </strong>{{ checkinfo.message }}</span>
+	  		</div>
+	    </div>
+    </nav>
 </template>
 <script>
 export default{
@@ -34,27 +47,17 @@ export default{
 		}
 	},
 	data(){
-		return{
-			isOpen: false,
+		return {
+			key: this.$vnode.key,
+			currdeg: 0,
 		}
 	},
-	methods:{
-		togAccordeon(event){	
-			var panel = event.target.nextElementSibling;
-			if ( event.target.id == 'fix' ){
-				return
-			}
-			if ( event.target.id == 'show-icon' ){
-				var panel = event.target.parentNode.parentNode.nextElementSibling;
-			}
-		    if ( panel.style.display === "block" ) {
-		      panel.style.display = "none";
-		      this.isOpen = !this.isOpen;
-		    } else {
-		      panel.style.display = "block";
-		      this.isOpen = !this.isOpen;
-		    }
+	methods: {
+		arrowRotate(event){
+			this.currdeg = this.currdeg + 180
+			const arrow = event.target.nextElementSibling.childNodes[2].childNodes[2]
+			arrow.style.transform = `rotateX(${this.currdeg}deg)`			
 		}
 	}
 }
-</script> 
+</script>

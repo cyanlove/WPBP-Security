@@ -19,9 +19,9 @@
 		<div class="separator"></div>
 		<div class="section-checks">
 			<checkblock 
-				v-for="checkinfo in info" 
+				v-for="( checkinfo, index ) in info" 
 				:checkinfo="checkinfo" 
-				:key="checkinfo.id"
+				:key="index"
 				@fix="fix"
 			>
 			</checkblock>
