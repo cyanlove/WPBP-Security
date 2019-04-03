@@ -22,7 +22,7 @@
  * @subpackage wp_security_bp/includes
  * @author     Cyan Lovers <hello@cyanlove.com>
  */
-class WP_Security_BP_Database {
+class WP_Security_BP_Database extends WP_Security_BP_Check {
 	/**
 	 * The unique identifier of this plugin.
 	 *
@@ -68,6 +68,27 @@ class WP_Security_BP_Database {
 	);
 
 	/**
+	 * SThe blacklist of worse usernames to use for database administrarion.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $db_users_blacklist  The array with blacklist users of database.
+	 */
+	private $db_users_blacklist = array(
+		'username',
+		'user1',
+		'user',
+		'admin',
+		'administrator',
+		'db2admin',
+		'dbadmin',
+		'demo',
+		'root',
+		'sql',
+		'pos',
+	);
+
+	/**
 	 * The domain of site.
 	 *
 	 * @since    1.0.0
@@ -84,6 +105,15 @@ class WP_Security_BP_Database {
 	 * @var      string    $db_name    From global to local in __construct.
 	 */
 	private $db_name;
+
+	/**
+	 * The database administrator user.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $db_user    From global to local in __construct.
+	 */
+	private $db_user;
 
 	/**
 	 * Database version MySQL.
@@ -122,6 +152,7 @@ class WP_Security_BP_Database {
 	public function __construct( $plugin_name, $json ) {
 
 		global $wpdb;
+		$this->db_user       = $wpdb->dbuser;
 		$this->db_name       = $wpdb->dbname;
 		$this->db_version    = $wpdb->db_version();
 		$this->tables_prefix = $wpdb->prefix;
@@ -132,7 +163,7 @@ class WP_Security_BP_Database {
 	}
 
 	/**
-	 * Cchecks DB name and decides ig its enough secure or not.
+	 * Cchecks DB name and decides either if its enough secure or not.
 	 *
 	 * @since    1.0.0
 	 */
@@ -173,10 +204,54 @@ class WP_Security_BP_Database {
 		}
 	}
 
-	public function check_user() {}
+	/**
+	 * Checks DB user and decides either if its enough secure or not.
+	 *
+	 * @since    1.0.0
+	 */
+	public function check_user() {
+
+		$check              = true;
+		$args['short_desc'] = 'check DB user';
+		$args['data']       = $this->db_user;
+
+		//check if dbuser is in array of blacklist or wpadmin or users.
+		$admins    = $this->query_users( [ 'include' => [] ] );
+		$top_users = $this->query_users( [ 'roles' => array() ] );
+
+		if (
+			$this->users_match(
+				array(
+					$admins,
+					$top_users,
+				),
+				'display_name',
+				$this->db_user
+			)
+		) {
+			$check = false;
+		} else {
+			foreach ( $this->db_users_blacklist as $blacklisted_user ) {
+
+				if ( $this->comparator( $blacklisted_user, $this->db_user ) ) {
+
+					$check = false;
+					break;
+				}
+			}
+		}
+
+		if ( $check ) {
+			$args['message'] = __( 'Your database user is fine.', 'wp-security-bp' );
+			$this->response->pass( $args );
+		} else {
+			$args['message'] = __( 'Your database user is not secure enough.', 'wp-security-bp' );
+			$args['action']  = 'database-fix-user';
+			$this->response->fail( $args );
+		}
+	}
 
 	public function check_mysql_version() {}
 
 	public function check_tables_prefix() {}
-
 }

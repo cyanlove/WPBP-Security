@@ -110,6 +110,11 @@ class WP_Security_BP {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-i18n.php';
 
 		/**
+		 * The class model for every checks class.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-check.php';
+
+		/**
 		 * The class responsible for reading and writing files.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-json.php';
@@ -125,7 +130,7 @@ class WP_Security_BP {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-users.php';
 
 		/**
-		 * The class responsible for scan and evaluate users.
+		 * The class responsible for scan and evaluate db security.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-security-bp-database.php';
 
