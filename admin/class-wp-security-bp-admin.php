@@ -207,6 +207,7 @@ class WP_Security_BP_Admin {
 		// Class Database checks.
 		$db         = new WP_Security_BP_Database( $this->plugin_name, $this->json );
 		$db->check_name();
+		$db->check_user();
 
 		$this->json->response();
 	}
